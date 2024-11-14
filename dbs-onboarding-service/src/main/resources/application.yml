@@ -1,0 +1,49 @@
+server:
+  port: 9915
+
+# API Registry client configuration
+eureka:
+  instance:
+    metadata-map:
+      public: true
+      role: live
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/registry/eureka/
+
+# Configure Internal JWT handler
+sso:
+  jwt:
+    internal:
+      signature:
+        key:
+          type: ENV
+          value: SIG_SECRET_KEY
+
+# Spring health monitoring
+management:
+  health:
+    jms:
+      enabled: false
+
+spring:
+  activemq:
+    broker-url: ${activemq.url:tcp://localhost:61616}
+  datasource:
+    driver-class-name: ${spring.datasource.driver.dbs-onboarding-service}
+    username: ${spring.datasource.username.dbs-onboarding-service}
+    password: ${spring.datasource.password.dbs-onboarding-service}
+    url: ${spring.datasource.url.dbs-onboarding-service}
+
+# Logging
+logging:
+  level:
+    com.microsphere: INFO
+    com.microsphere.bank: DEBUG
+
+microsphere:
+  bank:
+    api:
+      pull-account-url: http://localhost:8080/holding-container/api/v1.0.0
+      ibs-api-url: http://localhost:8080/holding-container/api/v1.0.0
+      legal-entity-api-url: http://localhost:8080/holding-container/api/v1.0.0

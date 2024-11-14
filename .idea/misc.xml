@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/dbs-specs/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-onboarding-service/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-client-bom/pom.xml" />
+        <option value="$PROJECT_DIR$/bank-specs/api-bom/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/user-manager-extension-client-api/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/api-client/account-balance-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/batch-payment-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/beneficiary-verification-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-afb-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-cards-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-cards-lockunlock-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-client-statements/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-get-ld-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-get-mg-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-api-submit-cards/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/biat-prefix-check-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/bill-payment-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/bill-payment-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/calcul-sdr-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/card-balance-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/check-transmitter-code/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/claim-api-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/followup-checkbook-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/foreign-trade-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/foreign-trade-advance-api/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/funds-transfer-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/international-batch-payment-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/orange-phone-payment/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/order-checkbook-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/phone-payment-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/phone-payment-reverse-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/places-mxp-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/places-t24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/pull-accounts-from-T24-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/securities-opcvm-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/self-enrolment-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/self-enrolment-subscription-client/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/submit-batch-debit/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/update-user-t24/pom.xml" />
+        <option value="$PROJECT_DIR$/api-client/value-management-client/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/account-statement-extension-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/account-statement-extension-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/account-statement-integration-outbound-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/actions-integration-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/actions-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/arrangement-integration-outbound-balance-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/arrangement-manager-extension-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/audit-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/batch-order-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/batch-order-download-rejection-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/batch-order-scheduled-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/biat-dms-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/bill-payment-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/bill-payment-integration-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/bill-payment-order-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/card-manager-travel-notices-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/cards-manager-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/checkbook-manager-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/communications-outbound-integration-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/confirmation-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/contact-manager-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/contact-manager-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/device-management-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/domiciliation-integration-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/exchange-integration-outbound-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/foreign-trade-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/identity-extension-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/identity-integration-outbound-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/limits-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/loan-simulator-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/marketing-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/message-center-integration-specification/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/notification-integration-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/notifications-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-batch-integration-outbound-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-batch-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-configuration-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-order-extension-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-order-integration-outbound-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/payment-order-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/phone-payment-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/places-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/push-integration-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/self-enrolment-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/self-enrolment-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/transaction-download-afb-client-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/transaction-manager-extension-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/transaction-manager-persistence-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/transaction-manager-service-api/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/user-manager-integration-outbound/pom.xml" />
+        <option value="$PROJECT_DIR$/dbs-specs/value-management-client-api/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="corretto-11 (2)" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

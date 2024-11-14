@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.microsphere.bank.api</groupId>
+    <artifactId>bank-specs</artifactId>
+    <version>2022.08-LTS-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>common-client</artifactId>
+  <name>BANK :: Client API Services :: common-client</name>
+
+  <properties>
+    <ssdk.version>13.0.0</ssdk.version>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <threetenbp.version>1.2</threetenbp.version>
+    <jackson-datatype-threetenbp.version>2.6.4</jackson-datatype-threetenbp.version>
+    <swagger-codegenerators.version>1.0.11</swagger-codegenerators.version>
+  </properties>
+
+  <dependencies>
+    <!-- Spring Boot dependencies -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <!-- JSON processing: RestTemplate dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.threeten</groupId>
+      <artifactId>threetenbp</artifactId>
+      <version>${threetenbp.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.joschi.jackson</groupId>
+      <artifactId>jackson-datatype-threetenbp</artifactId>
+      <version>${jackson-datatype-threetenbp.version}</version>
+    </dependency>
+    <!-- swagger code generators dependency -->
+    <dependency>
+      <groupId>io.swagger.codegen.v3</groupId>
+      <artifactId>swagger-codegen-generators</artifactId>
+      <version>${swagger-codegenerators.version}</version>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.backbase.buildingblocks</groupId>
+        <artifactId>backbase-building-blocks-release</artifactId>
+        <version>${ssdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+</project>

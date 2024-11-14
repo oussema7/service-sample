@@ -1,0 +1,3674 @@
+openapi: 3.0.3
+info:
+  title: Approvals service
+  description: "Other services approve or reject approvals, and update approval types,\
+    \ policies, and policy assignments."
+  version: 2.5.2
+  x-icon: approval
+servers:
+  - url: http://localhost:4010
+    description: Prism mock server
+  - url: http://localhost:18092
+    description: Locally running service
+tags:
+  - name: approval-type-assignments
+  - name: approval-types
+  - name: approvals
+  - name: policies
+  - name: policy-assignments
+paths:
+  /service-api/v2/approval-types:
+    summary: Approval types
+    description: This endpoint is used to manage approval types.
+    post:
+      tags:
+        - approval-types
+      description: Create approval type.
+      operationId: postApprovalType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostApprovalTypeRequest'
+            examples:
+              post-approval-type-request:
+                $ref: '#/components/examples/post-approval-type-request'
+      responses:
+        "201":
+          description: Approval type created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostApprovalTypeResponse'
+              examples:
+                post-approval-type-response:
+                  $ref: '#/components/examples/post-approval-type-response'
+        "400":
+          description: BadRequestException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                post-approval-type-response-not-unique:
+                  $ref: '#/components/examples/post-approval-type-response-not-unique'
+  /service-api/v2/approval-types/{id}:
+    summary: Approval type by id
+    description: Perform actions on an approval type with a given ID.
+    delete:
+      tags:
+        - approval-types
+      description: Delete approval type
+      operationId: deleteApprovalTypeById
+      parameters:
+        - name: id
+          in: path
+          description: Approval type id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        "204":
+          description: Approval type deleted
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+  /service-api/v2/approval-type-assignments/bulk:
+    description: Assign an approval type to a job profile in bulk. Please note that
+      you can only assign one approval type to one job profile.
+    post:
+      tags:
+        - approval-type-assignments
+      description: Bulk assign approval type
+      operationId: postBulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostBulkApprovalTypeAssignmentRequest'
+            examples:
+              post-approval-type-assignment-bulk-request:
+                $ref: '#/components/examples/post-approval-type-assignment-bulk-request'
+      responses:
+        "201":
+          description: Approval type assignments created succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostBulkApprovalTypeAssignmentResponse'
+              examples:
+                post-approval-type-assignment-bulk-response:
+                  $ref: '#/components/examples/post-approval-type-assignment-bulk-response'
+        "400":
+          description: BadRequestException
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                conflict:
+                  $ref: '#/components/examples/conflict'
+                duplicate:
+                  $ref: '#/components/examples/duplicate'
+                job-profile-not-found:
+                  $ref: '#/components/examples/job-profile-not-found'
+                approval-type-not-found:
+                  $ref: '#/components/examples/approval-type-not-found'
+  /service-api/v2/approval-type-assignments/bulk/filter:
+    description: Filter assigned approval types
+    post:
+      tags:
+        - approval-type-assignments
+      description: Retrieve approval type assignments by job profile ids
+      operationId: postFilter
+      requestBody:
+        description: Retrieve approval type assignments by job profile ids
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostFilterBulkApprovalTypeAssignmentRequest'
+            examples:
+              post-filter-approval-type-assignment-bulk-request:
+                $ref: '#/components/examples/post-filter-approval-type-assignment-bulk-request'
+      responses:
+        "200":
+          description: Assigned approval types assignments retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostFilterBulkApprovalTypeAssignmentResponse'
+              examples:
+                post-filter-approval-type-assignment-bulk-response:
+                  $ref: '#/components/examples/post-filter-approval-type-assignment-bulk-response'
+  /service-api/v2/approval-type-assignments/{id}:
+    description: Approval type assignment
+    get:
+      tags:
+        - approval-type-assignments
+      summary: Retrieve the approval type that is assigned to the given job profile.
+      description: Retrieve the approval type that is assigned to the given job profile.
+      operationId: getAssignedApprovalTypeById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the job profile.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        "200":
+          description: Detailed information about the approval type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetApprovalTypeResponse'
+              examples:
+                get-approval-type-response:
+                  $ref: '#/components/examples/get-approval-type-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+    put:
+      tags:
+        - approval-type-assignments
+      summary: Updates an existing type assignment to a new one.
+      description: Updates an existing type assignment to a new one.
+      operationId: putApprovalTypeAssignmentById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the job profile.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        description: Updates an existing type assignment to a new one.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutApprovalTypeAssignmentRequest'
+            examples:
+              put-approval-type-assignment:
+                $ref: '#/components/examples/put-approval-type-assignment'
+      responses:
+        "204":
+          description: Approval type assignment updated successfully
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                approval-type-not-found:
+                  $ref: '#/components/examples/approval-type-not-found-1'
+        "403":
+          description: Approval type assignment forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                post-approval-response-forbidden:
+                  $ref: '#/components/examples/post-approval-response-forbidden'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                approval-assignment-not-found:
+                  $ref: '#/components/examples/approval-assignment-not-found'
+    delete:
+      tags:
+        - approval-type-assignments
+      summary: This endpoint is used to delete the approval type that is assigned
+        to the given job profile.
+      description: This endpoint is used to delete the approval type that is assigned
+        to the given job profile.
+      operationId: deleteApprovalTypeAssignmentById
+      parameters:
+        - name: id
+          in: path
+          description: The id of the job profile.
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        "204":
+          description: approval type assignment is deleted
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                forbidden-error:
+                  $ref: '#/components/examples/forbidden-error'
+  /service-api/v2/approvals:
+    summary: Approvals
+    description: Approvals are created when the user is performing a specific flow
+      within any capability that requires approval.
+    post:
+      tags:
+        - approvals
+      description: Create an approval
+      operationId: postApproval
+      requestBody:
+        description: Create an approval
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostApprovalRequest'
+            examples:
+              simple:
+                $ref: '#/components/examples/simple'
+              pre-approved:
+                $ref: '#/components/examples/pre-approved'
+              pre-approved-pre-confirmed:
+                $ref: '#/components/examples/pre-approved-pre-confirmed'
+              with-confirmation:
+                $ref: '#/components/examples/with-confirmation'
+      responses:
+        "201":
+          description: Approval created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostApprovalResponse'
+              examples:
+                simple:
+                  $ref: '#/components/examples/simple-1'
+                pre-approved:
+                  $ref: '#/components/examples/pre-approved-1'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "401":
+          description: Post approval with pre-approve unauthorized
+          headers:
+            WWW-Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              example: Bearer challengeTypes=reauth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReauthUnauthorizedError'
+              examples:
+                unauthorized-error:
+                  $ref: '#/components/examples/unauthorized-error'
+        "403":
+          description: Post approval with pre-approve forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                post-approval-response-forbidden:
+                  $ref: '#/components/examples/post-approval-response-forbidden-1'
+  /service-api/v2/approvals/filter:
+    description: Retrieve a filtered list of approvals. It supports two ways of filtering.
+      The first method is by id's (without pagination) intended for capabilities to
+      enrich their data with the approval data. The second way is to retrieve the
+      approvals which can be approved or rejected by user (with pagination) intended
+      for capabilities to enrich the approvals with the data of the item it relates
+      to (the oppsite of the first method).
+    post:
+      tags:
+        - approvals
+      description: Filter approvals
+      operationId: postFilterApprovals
+      parameters:
+        - name: from
+          in: query
+          description: Page Number. Skip over pages of elements by specifying a start
+            value for the query
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: cursor
+          in: query
+          description: Record UUID. This allows to point to the record to start the
+            selection from.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+            default: ""
+        - name: size
+          in: query
+          description: |
+            Limit the number of elements on the response. This value may not be negative.
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostFilterApprovalsRequest'
+            examples:
+              by-id:
+                $ref: '#/components/examples/by-id'
+              can-approve:
+                $ref: '#/components/examples/can-approve'
+      responses:
+        "200":
+          description: Filtered list of approvals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostFilterApprovalsResponse'
+              examples:
+                by-id:
+                  $ref: '#/components/examples/by-id-1'
+                can-approve:
+                  $ref: '#/components/examples/can-approve-1'
+        "400":
+          description: The request to filter for approvals can be invalid for several
+            reasons. See the examples.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                invalid-cursor:
+                  $ref: '#/components/examples/invalid-cursor'
+                invalid-request:
+                  $ref: '#/components/examples/invalid-request'
+        "403":
+          description: Insufficient permissions due to a lack of job profiles for
+            the relevant business functions. E.g. only a job profile for contacts
+            but none for any of the payment orders business functions when filtering
+            for approvable payment orders.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                post-filter-approvals-response-forbidden-insufficient-permissions:
+                  $ref: '#/components/examples/post-filter-approvals-response-forbidden-insufficient-permissions'
+  /service-api/v2/approvals/verify:
+    description: Verify approval rights
+    post:
+      tags:
+        - approvals
+      description: Verify approval rights
+      operationId: postVerify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostVerifyApprovalRequest'
+            examples:
+              post-verify-approval-request:
+                $ref: '#/components/examples/post-verify-approval-request'
+      responses:
+        "200":
+          description: Response containing canApprove and finalApprover fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostVerifyApprovalResponse'
+              examples:
+                post-verify-approval-response:
+                  $ref: '#/components/examples/post-verify-approval-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                forbidden-error:
+                  $ref: '#/components/examples/forbidden-error'
+  /service-api/v2/approvals/{approvalId}:
+    summary: Approval detail by ID
+    description: An approval that holds all details related to it.
+    get:
+      tags:
+        - approvals
+      description: Get approval detail by id
+      operationId: getApprovalById
+      parameters:
+        - name: approvalId
+          in: path
+          description: "The Id of the approval request. Example: \"b3e4692d-6772-4fb2-9446-b8f4607f49b1\""
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+        - name: serviceAgreementId
+          in: query
+          description: Internal id of the Service agreement
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: userId
+          in: query
+          description: Internal id of the user
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: enrichUsersWithFullName
+          in: query
+          description: Tells the approval service to enrich the approval and records
+            with the users' "Full name" and "External user id".
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: Detailed information about the approval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationGetApprovalDetailResponse'
+              examples:
+                get-approval-details-response:
+                  $ref: '#/components/examples/get-approval-details-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                forbidden-error:
+                  $ref: '#/components/examples/forbidden-error'
+  /service-api/v2/approvals/{approvalId}/filter:
+    summary: Find approval by id
+    description: Gets all details about a single approval id.
+    post:
+      tags:
+        - approvals
+      description: Find approval by id
+      operationId: postFilterByApprovalId
+      parameters:
+        - name: approvalId
+          in: path
+          description: "The Id of the approval request. Example: \"b3e4692d-6772-4fb2-9446-b8f4607f49b1\""
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostFilterApprovalsDetailsRequest'
+            examples:
+              post-filter-approval-details-request:
+                $ref: '#/components/examples/post-filter-approval-details-request'
+      responses:
+        "200":
+          description: Detailed information about the approval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostFilterApprovalsDetailsResponse'
+              examples:
+                post-filter-approval-details-response:
+                  $ref: '#/components/examples/post-filter-approval-details-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+  /service-api/v2/approvals/{approvalId}/status:
+    summary: Set status by ID
+    description: Update the status of an approval.
+    put:
+      tags:
+        - approvals
+      summary: With this endpoint the status of an approval request can be set to
+        CANCELLED.
+      description: With this endpoint the status of an approval request can be set
+        to CANCELLED.
+      operationId: putStatusByApprovalId
+      parameters:
+        - name: approvalId
+          in: path
+          description: "The Id of the approval request. Example: \"b3e4692d-6772-4fb2-9446-b8f4607f49b1\""
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      requestBody:
+        description: With this endpoint the status of an approval request can be set
+          to CANCELLED.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUpdateStatusRequest'
+            examples:
+              put-update-status-request:
+                $ref: '#/components/examples/put-update-status-request'
+      responses:
+        "204":
+          description: The request was processed successfully and the approval request
+            status is the sent status.
+        "400":
+          description: If the approval status from the request is any other state
+            then CANCELLED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                put-update-status-request-bad-request:
+                  $ref: '#/components/examples/put-update-status-request-bad-request'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+  /service-api/v2/approvals/{approvalId}/records:
+    summary: Approval records
+    description: An approval record holds the details of an approve or reject action
+      from a user on an approval.
+    post:
+      tags:
+        - approvals
+      description: "Approve or reject an approval. Depending on the applicable policy,\
+        \ the status of the approval may or may not change as a result of this action."
+      operationId: postApprovalRecordByApprovalId
+      parameters:
+        - name: approvalId
+          in: path
+          description: "The Id of the approval request to update. Example: \"b3e4692d-6772-4fb2-9446-b8f4607f49b1\""
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+        - name: filterCreatedRecord
+          in: query
+          description: "If this set to true, only created record is returned in the\
+          \ response. Default is set to false."
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        description: "Approve or reject an approval. Depending on the applicable policy,\
+          \ the status of the approval may or may not change as a result of this action."
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostApprovalRecordRequest'
+            examples:
+              post-approval-record-request:
+                $ref: '#/components/examples/post-approval-record-request'
+              post-approval-record-request-with-confirmation:
+                $ref: '#/components/examples/post-approval-record-request-with-confirmation'
+              post-approval-record-request-pre-confirmed:
+                $ref: '#/components/examples/post-approval-record-request-pre-confirmed'
+      responses:
+        "200":
+          description: The request was processed successfully and the response contains
+            the new state of the approval.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostApprovalResponse'
+              examples:
+                post-approval-record-response:
+                  $ref: '#/components/examples/post-approval-record-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+        "401":
+          description: Post approval record unauthorized
+          headers:
+            WWW-Authenticate:
+              style: simple
+              explode: false
+              schema:
+                type: string
+              example: Bearer challengeTypes=reauth
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReauthUnauthorizedError'
+              examples:
+                reauth-unauthorized-error:
+                  $ref: '#/components/examples/reauth-unauthorized-error'
+        "403":
+          description: Post approval record forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                missing-job-profile-with-function:
+                  $ref: '#/components/examples/missing-job-profile-with-function'
+                missing-job-profile-with-data-access:
+                  $ref: '#/components/examples/missing-job-profile-with-data-access'
+                missing-required-approval-type:
+                  $ref: '#/components/examples/missing-required-approval-type'
+                missing-policy-assignment:
+                  $ref: '#/components/examples/missing-policy-assignment'
+                invalid-approval-status:
+                  $ref: '#/components/examples/invalid-approval-status'
+                already-updated:
+                  $ref: '#/components/examples/already-updated'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+  /service-api/v2/approval-records/{approvalRecordId}/update-status:
+    summary: Update status of an approval record.
+    post:
+      tags:
+        - approvals
+      description: Using this endpoint status of an approval record can be updated.
+        The status of the approval also may change as a result of this action.
+      operationId: postStatusUpdateByApprovalRecordId
+      parameters:
+        - name: approvalRecordId
+          in: path
+          description: The id of the approval record
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+        - name: filterUpdatedRecord
+          in: query
+          description: "If this set to true, only updated record is returned in the\
+          \ response. Default is set to false."
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+            default: false
+      requestBody:
+        description: Using this endpoint status of an approval record can be updated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostApprovalRecordStatusUpdateRequest'
+            examples:
+              post-approval-record-status-request:
+                $ref: '#/components/examples/post-approval-record-status-request'
+      responses:
+        "200":
+          description: The response body of approval record update action. This response
+            contains the approval along with the updated approval record.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostApprovalResponse'
+              examples:
+                post-approval-record-response:
+                  $ref: '#/components/examples/post-approval-record-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                put-update-status-request-bad-request:
+                  $ref: '#/components/examples/put-update-status-request-bad-request'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                missing-job-profile-with-function:
+                  $ref: '#/components/examples/missing-job-profile-with-function'
+                missing-job-profile-with-data-access:
+                  $ref: '#/components/examples/missing-job-profile-with-data-access'
+                missing-required-approval-type:
+                  $ref: '#/components/examples/missing-required-approval-type'
+                missing-policy-assignment:
+                  $ref: '#/components/examples/missing-policy-assignment'
+                invalid-approval-status:
+                  $ref: '#/components/examples/invalid-approval-status'
+                invalid-record-status:
+                  $ref: '#/components/examples/invalid-record-status'
+                already-updated:
+                  $ref: '#/components/examples/already-updated'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+  /service-api/v2/policies:
+    summary: Policies
+    description: Policies are the core of the approval service and define how approval
+      requests are processed.
+    post:
+      tags:
+        - policies
+      summary: Create a new policy.
+      description: Create a new policy.
+      operationId: postPolicy
+      requestBody:
+        description: Create a new policy.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostPolicyRequest'
+            examples:
+              post-policy-request:
+                $ref: '#/components/examples/post-policy-request'
+      responses:
+        "201":
+          description: Policy created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostPolicyResponse'
+              examples:
+                post-policy-response:
+                  $ref: '#/components/examples/post-policy-response'
+        "400":
+          description: Failed to create the policy due to an error in the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                post-policy-response-bad-request:
+                  $ref: '#/components/examples/post-policy-response-bad-request'
+  /service-api/v2/policies/{id}:
+    summary: Policy by id
+    description: Perform actions on a policy with a given ID.
+    delete:
+      tags:
+        - policies
+      description: Delete policy by id
+      operationId: deletePolicyById
+      parameters:
+        - name: id
+          in: path
+          description: Policy id
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            type: string
+      responses:
+        "204":
+          description: Policy deleted successfully
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                post-policy-response-bad-request:
+                  $ref: '#/components/examples/post-policy-response-bad-request'
+        "404":
+          description: NotFound
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+              examples:
+                not-found-error:
+                  $ref: '#/components/examples/not-found-error'
+  /service-api/v2/policy-assignments:
+    summary: Policy Assignments
+    description: This endpoint is used to manage the policy assignments.
+    delete:
+      tags:
+        - policy-assignments
+      summary: Delete policies assigned to a service agreement. Optionally a resource
+        or function can be specified to delete only a subset.
+      description: Delete policies assigned to a service agreement. Optionally a resource
+        or function can be specified to delete only a subset.
+      operationId: deletePolicyAssignment
+      parameters:
+        - name: serviceAgreementId
+          in: query
+          description: |
+            The external serviceAgreementId to remove the policies assigned to. It will be mapped to the internal id by the service.
+          required: false
+          style: form
+          explode: true
+          schema:
+            maxLength: 36
+            type: string
+        - name: resource
+          in: query
+          description: "When specified, only policies assigned to this resource will\
+          \ be deleted. E.g. \"Payments\" to delete every policy assigned to any Payments\
+          \ function."
+          required: false
+          style: form
+          explode: true
+          schema:
+            maxLength: 32
+            type: string
+        - name: function
+          in: query
+          description: "When specified, only policies assigned to this function will\
+          \ be deleted. E.g. \"SEPA CT\" to delete the policies assigned to this function\
+          \ only."
+          required: false
+          style: form
+          explode: true
+          schema:
+            maxLength: 32
+            type: string
+      responses:
+        "200":
+          description: Policies are deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationDeletePolicyAssignmentResponse'
+              examples:
+                delete-policy-assignment-response:
+                  $ref: '#/components/examples/delete-policy-assignment-response'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                forbidden-error:
+                  $ref: '#/components/examples/forbidden-error'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+  /service-api/v2/policy-assignments/filter:
+    description: Filter assigned policies
+    post:
+      tags:
+        - policy-assignments
+      summary: Filter assigned policies by service agreement and optional additional
+        criteria.
+      description: Filter assigned policies by service agreement and optional additional
+        criteria
+      operationId: postFilterWithPostFilterPolicyAssignmentRequestpostFilterassignedpolicies
+      requestBody:
+        description: Filter assigned policies by service agreement and optional additional
+          criteria
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostFilterPolicyAssignmentRequest'
+            examples:
+              post-filter-policy-assignment-request:
+                $ref: '#/components/examples/post-filter-policy-assignment-request'
+      responses:
+        "200":
+          description: List of assigned policies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PresentationPostFilterPolicyAssignmentResponse'
+              examples:
+                post-filter-policy-assignment-response:
+                  $ref: '#/components/examples/post-filter-policy-assignment-response'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                bad-request-validation-error:
+                  $ref: '#/components/examples/bad-request-validation-error'
+  /service-api/v2/policy-assignments/bulk:
+    summary: Policy Assignments bulk ingestion
+    description: This endpoint is used to manage the policy assignments in bulk.
+    post:
+      tags:
+        - policy-assignments
+      description: Policy Assignments bulk ingestion
+      operationId: postCreatesBulkPolicyAssignments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PresentationPostPolicyAssignmentBulkRequest'
+            examples:
+              unbounded:
+                $ref: '#/components/examples/unbounded'
+              bounded:
+                $ref: '#/components/examples/bounded'
+              bounded-multi:
+                $ref: '#/components/examples/bounded-multi'
+              multi-resources:
+                $ref: '#/components/examples/multi-resources'
+              data-group-specific-bounds:
+                $ref: '#/components/examples/data-group-specific-bounds'
+      responses:
+        "204":
+          description: Policies successfully assigned
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                policy-not-found:
+                  $ref: '#/components/examples/policy-not-found'
+                duplicate:
+                  $ref: '#/components/examples/duplicate-1'
+                unbounded-duplicate:
+                  $ref: '#/components/examples/unbounded-duplicate'
+                invalid-bound:
+                  $ref: '#/components/examples/invalid-bound'
+components:
+  schemas:
+    BadRequestError:
+      title: BadRequestError
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    NotFoundError:
+      title: NotFoundError
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    ForbiddenError:
+      title: ForbiddenError
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    ReauthUnauthorizedError:
+      type: object
+      properties:
+        challenges:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+        data:
+          type: object
+          additionalProperties:
+            type: string
+    PostApprovalTypeRequest:
+      required:
+        - description
+        - name
+        - rank
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        rank:
+          $ref: '#/components/schemas/Rank'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Create an approval type
+    PostApprovalTypeResponse:
+      required:
+        - approvalType
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: The approval type that was created
+    GetApprovalTypeResponse:
+      required:
+        - approvalType
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with an approval type.
+    PresentationPostBulkApprovalTypeAssignmentRequest:
+      required:
+        - approvalTypeAssignments
+      type: object
+      properties:
+        approvalTypeAssignments:
+          maxItems: 100
+          minItems: 1
+          type: array
+          description: The request body with a set of approval type assignments.
+          items:
+            $ref: '#/components/schemas/PresentationApprovalTypeAssignmentDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Assign an approval type to a job profile in bulk.
+    PresentationPostBulkApprovalTypeAssignmentResponse:
+      required:
+        - successCount
+      type: object
+      properties:
+        successCount:
+          $ref: '#/components/schemas/SuccessCount'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with success counter.
+    PresentationPostFilterBulkApprovalTypeAssignmentRequest:
+      required:
+        - jobProfileIds
+      type: object
+      properties:
+        jobProfileIds:
+          maxItems: 100
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Job profile ids list
+    PresentationPostFilterBulkApprovalTypeAssignmentResponse:
+      required:
+        - approvalTypeAssignments
+      type: object
+      properties:
+        approvalTypeAssignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationAssignedApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "Response with job profile id, approval type and name."
+    PutApprovalTypeAssignmentRequest:
+      required:
+        - approvalTypeId
+      type: object
+      properties:
+        approvalTypeId:
+          $ref: '#/components/schemas/Uuid'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Update an approval type to a job profile.
+    PresentationPostFilterApprovalsRequest:
+      required:
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        canApprove:
+          type: boolean
+          description: "If true, it will only return approvals the user with the given\
+            \ job profile summary is able to approve. This filter is not compatible\
+            \ with 'approvalIds'!"
+        canReject:
+          type: boolean
+          description: "If true, it will only return approvals the user with the given\
+            \ job profile summary is able to reject. This filter is not compatible\
+            \ with 'approvalIds'!"
+        functions:
+          type: array
+          description: List of functions used to narrow down the results. This filter
+            is not compatible with 'approvalIds'!
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        approvalIds:
+          type: array
+          description: A list of ID's of the approval to retrieve. This filter is
+            not compatible with other filters!
+          items:
+            $ref: '#/components/schemas/Uuid'
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is a POST request with filter parameters in the request body.
+    PresentationPostFilterApprovalsResponse:
+      required:
+        - approvals
+      type: object
+      properties:
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalDto'
+        cursor:
+          $ref: '#/components/schemas/Uuid'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "A filtered list of approvals, based on the request parameters"
+    PresentationPostApprovalRequest:
+      required:
+        - function
+        - itemId
+        - resource
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        itemId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        amountDetails:
+          $ref: '#/components/schemas/Currency'
+        action:
+          $ref: '#/components/schemas/Action'
+        approved:
+          type: boolean
+          description: When true the approval created will also be approved by the
+            same user.
+        confirmationDetails:
+          $ref: '#/components/schemas/ConfirmationDetails'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to create a new approval optionally the approval can
+        be pre-approved by the user creating it.
+    PresentationPostApprovalResponse:
+      required:
+        - approval
+      type: object
+      properties:
+        approval:
+          $ref: '#/components/schemas/ApprovalDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response containing the newly created approval
+    PostVerifyApprovalRequest:
+      required:
+        - dataAccessItemId
+        - function
+        - resource
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        amountDetails:
+          $ref: '#/components/schemas/Currency'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to verify if the user can create an approval and if
+        it is the final approver.
+    PostVerifyApprovalResponse:
+      required:
+        - canApprove
+        - finalApprover
+      type: object
+      properties:
+        canApprove:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can approve it, depending on the policy\
+            \ that applies."
+        finalApprover:
+          type: boolean
+          description: This flag indicates if the user (with his current context)
+            is the final approver that is needed.
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response body to verify if the user can create an approval and
+        if it is the final approver.
+    PresentationGetApprovalDetailResponse:
+      required:
+        - approvalDetails
+      type: object
+      properties:
+        approvalDetails:
+          $ref: '#/components/schemas/PresentationApprovalDetailDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response containing the a detailedapproval
+    PutUpdateStatusRequest:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is the request body to request an update of the status foran
+        approval.
+    PostApprovalRecordRequest:
+      required:
+        - serviceAgreementId
+        - status
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/RecordStatus'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        confirmationDetails:
+          $ref: '#/components/schemas/ConfirmationDetails'
+        statusCode:
+          $ref: '#/components/schemas/RecordStatusCode'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is the request body to request an update of the status for
+        an approval. This is initiated by a user when he either approves or rejects
+        an item in a capability.
+    PostFilterApprovalsDetailsRequest:
+      required:
+        - jobProfilesSummary
+      type: object
+      properties:
+        jobProfilesSummary:
+          $ref: '#/components/schemas/JobProfilesSummaryDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Get request for getting detailed information of a single approval.
+    PostFilterApprovalsDetailsResponse:
+      required:
+        - approvalDetails
+      type: object
+      properties:
+        approvalDetails:
+          $ref: '#/components/schemas/PresentationApprovalDetailDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Result of getting the approval details.
+    PostApprovalRecordStatusUpdateRequest:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApprovalRecordStatus'
+        statusCode:
+          type: string
+      description: This is the request body to request an update of the status for
+        an approval record.
+    PostPolicyRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        items:
+          maxItems: 50
+          minItems: 0
+          type: array
+          description: A list of approval types and the number of each approval type
+            is required. Can be empty to represent a zero-approval policy.
+          items:
+            $ref: '#/components/schemas/CreatePolicyItemDto'
+        logicalItems:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: A policy declaration that allows you to add logical operators
+            to the contained policy items. If this field is specified the items field
+            is ignored.
+          items:
+            $ref: '#/components/schemas/LogicalPolicyItemDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to create a new approval policy. If 'logicalItems'
+        is used it will be used to create a complex policy. If `items` is used but
+        not 'logicalItems' a simple policy is created. If both are omitted a zero-approval
+        policy is created.
+    PostPolicyResponse:
+      required:
+        - policy
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/PolicyDetailsDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response body when a new policy has been created
+    PresentationPostPolicyAssignmentBulkRequest:
+      required:
+        - policyAssignments
+      type: object
+      properties:
+        policyAssignments:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentRequest'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Assign a policy.
+    PresentationDeletePolicyAssignmentResponse:
+      required:
+        - numberOfRowsAffected
+      type: object
+      properties:
+        numberOfRowsAffected:
+          type: integer
+          description: Number of deleted items.
+          format: int32
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Returns the number of records that were affected by the delete
+        action.
+    PresentationPostFilterPolicyAssignmentRequest:
+      required:
+        - externalServiceAgreementId
+      type: object
+      properties:
+        externalServiceAgreementId:
+          $ref: '#/components/schemas/ExternalServiceAgreementId'
+        entitlements:
+          type: array
+          description: List of resource with functions to filter on.
+          items:
+            $ref: '#/components/schemas/PresentationEntitlementDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "Filter on assigned policies in combination with External Service\
+        \ agreement and [resource]s + [business function]s"
+    PresentationPostFilterPolicyAssignmentResponse:
+      required:
+        - policyAssignments
+      type: object
+      properties:
+        policyAssignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with a list of policy assignments.
+    bad-request-error:
+      title: BadRequestError
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    not-found-error:
+      title: NotFoundError
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    forbidden-error:
+      title: ForbiddenError
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/error-item'
+    reauth-unauthorized-error:
+      type: object
+      properties:
+        challenges:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+        data:
+          type: object
+          additionalProperties:
+            type: string
+    post-approval-type-request:
+      required:
+        - description
+        - name
+        - rank
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        rank:
+          $ref: '#/components/schemas/Rank'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Create an approval type
+    post-approval-type-response:
+      required:
+        - approvalType
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: The approval type that was created
+    get-approval-type-response:
+      required:
+        - approvalType
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with an approval type.
+    post-approval-type-assignment-bulk-request:
+      required:
+        - approvalTypeAssignments
+      type: object
+      properties:
+        approvalTypeAssignments:
+          maxItems: 100
+          minItems: 1
+          type: array
+          description: The request body with a set of approval type assignments.
+          items:
+            $ref: '#/components/schemas/PresentationApprovalTypeAssignmentDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Assign an approval type to a job profile in bulk.
+    post-approval-type-assignment-bulk-response:
+      required:
+        - successCount
+      type: object
+      properties:
+        successCount:
+          $ref: '#/components/schemas/SuccessCount'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with success counter.
+    post-filter-approval-type-assignment-bulk-request:
+      required:
+        - jobProfileIds
+      type: object
+      properties:
+        jobProfileIds:
+          maxItems: 100
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Job profile ids list
+    post-filter-approval-type-assignment-bulk-response:
+      required:
+        - approvalTypeAssignments
+      type: object
+      properties:
+        approvalTypeAssignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationAssignedApprovalTypeDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "Response with job profile id, approval type and name."
+    put-approval-type-assignment-request:
+      required:
+        - approvalTypeId
+      type: object
+      properties:
+        approvalTypeId:
+          $ref: '#/components/schemas/Uuid'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Update an approval type to a job profile.
+    post-filter-approvals-request:
+      required:
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        canApprove:
+          type: boolean
+          description: "If true, it will only return approvals the user with the given\
+            \ job profile summary is able to approve. This filter is not compatible\
+            \ with 'approvalIds'!"
+        canReject:
+          type: boolean
+          description: "If true, it will only return approvals the user with the given\
+            \ job profile summary is able to reject. This filter is not compatible\
+            \ with 'approvalIds'!"
+        functions:
+          type: array
+          description: List of functions used to narrow down the results. This filter
+            is not compatible with 'approvalIds'!
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        approvalIds:
+          type: array
+          description: A list of ID's of the approval to retrieve. This filter is
+            not compatible with other filters!
+          items:
+            $ref: '#/components/schemas/Uuid'
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is a POST request with filter parameters in the request body.
+    post-filter-approvals-response:
+      required:
+        - approvals
+      type: object
+      properties:
+        approvals:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalDto'
+        cursor:
+          $ref: '#/components/schemas/Uuid'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "A filtered list of approvals, based on the request parameters"
+    post-approval-request:
+      required:
+        - function
+        - itemId
+        - resource
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        itemId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        amountDetails:
+          $ref: '#/components/schemas/Currency'
+        action:
+          $ref: '#/components/schemas/Action'
+        approved:
+          type: boolean
+          description: When true the approval created will also be approved by the
+            same user.
+        confirmationDetails:
+          $ref: '#/components/schemas/ConfirmationDetails'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to create a new approval optionally the approval can
+        be pre-approved by the user creating it.
+    post-approval-response:
+      required:
+        - approval
+      type: object
+      properties:
+        approval:
+          $ref: '#/components/schemas/ApprovalDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response containing the newly created approval
+    post-verify-approval-request:
+      required:
+        - dataAccessItemId
+        - function
+        - resource
+        - serviceAgreementId
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        amountDetails:
+          $ref: '#/components/schemas/Currency'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to verify if the user can create an approval and if
+        it is the final approver.
+    post-verify-approval-response:
+      required:
+        - canApprove
+        - finalApprover
+      type: object
+      properties:
+        canApprove:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can approve it, depending on the policy\
+            \ that applies."
+        finalApprover:
+          type: boolean
+          description: This flag indicates if the user (with his current context)
+            is the final approver that is needed.
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response body to verify if the user can create an approval and
+        if it is the final approver.
+    get-approval-details-response:
+      required:
+        - approvalDetails
+      type: object
+      properties:
+        approvalDetails:
+          $ref: '#/components/schemas/PresentationApprovalDetailDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response containing the a detailedapproval
+    put-update-status-request:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is the request body to request an update of the status foran
+        approval.
+    post-approval-record-request:
+      required:
+        - serviceAgreementId
+        - status
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        status:
+          $ref: '#/components/schemas/RecordStatus'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        confirmationDetails:
+          $ref: '#/components/schemas/ConfirmationDetails'
+        statusCode:
+          $ref: '#/components/schemas/RecordStatusCode'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This is the request body to request an update of the status for
+        an approval. This is initiated by a user when he either approves or rejects
+        an item in a capability.
+    post-filter-approval-details-request:
+      required:
+        - jobProfilesSummary
+      type: object
+      properties:
+        jobProfilesSummary:
+          $ref: '#/components/schemas/JobProfilesSummaryDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Get request for getting detailed information of a single approval.
+    post-filter-approval-details-response:
+      required:
+        - approvalDetails
+      type: object
+      properties:
+        approvalDetails:
+          $ref: '#/components/schemas/PresentationApprovalDetailDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Result of getting the approval details.
+    post-approval-record-status-update-request:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ApprovalRecordStatus'
+        statusCode:
+          type: string
+      description: This is the request body to request an update of the status for
+        an approval record.
+    post-policy-request:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        items:
+          maxItems: 50
+          minItems: 0
+          type: array
+          description: A list of approval types and the number of each approval type
+            is required. Can be empty to represent a zero-approval policy.
+          items:
+            $ref: '#/components/schemas/CreatePolicyItemDto'
+        logicalItems:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: A policy declaration that allows you to add logical operators
+            to the contained policy items. If this field is specified the items field
+            is ignored.
+          items:
+            $ref: '#/components/schemas/LogicalPolicyItemDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Request body to create a new approval policy. If 'logicalItems'
+        is used it will be used to create a complex policy. If `items` is used but
+        not 'logicalItems' a simple policy is created. If both are omitted a zero-approval
+        policy is created.
+    post-policy-response:
+      required:
+        - policy
+      type: object
+      properties:
+        policy:
+          $ref: '#/components/schemas/PolicyDetailsDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response body when a new policy has been created
+    post-policy-assignment-bulk-request:
+      required:
+        - policyAssignments
+      type: object
+      properties:
+        policyAssignments:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentRequest'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Assign a policy.
+    delete-policy-assignment-response:
+      required:
+        - numberOfRowsAffected
+      type: object
+      properties:
+        numberOfRowsAffected:
+          type: integer
+          description: Number of deleted items.
+          format: int32
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Returns the number of records that were affected by the delete
+        action.
+    post-filter-policy-assignment-request:
+      required:
+        - externalServiceAgreementId
+      type: object
+      properties:
+        externalServiceAgreementId:
+          $ref: '#/components/schemas/ExternalServiceAgreementId'
+        entitlements:
+          type: array
+          description: List of resource with functions to filter on.
+          items:
+            $ref: '#/components/schemas/PresentationEntitlementDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "Filter on assigned policies in combination with External Service\
+        \ agreement and [resource]s + [business function]s"
+    post-filter-policy-assignment-response:
+      required:
+        - policyAssignments
+      type: object
+      properties:
+        policyAssignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: Response with a list of policy assignments.
+    error-item:
+      title: ErrorItem
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information.
+        key:
+          type: string
+          description: "{capability-name}.api.{api-key-name}. For generated validation\
+            \ errors this is the path in the document the error resolves to. e.g.\
+            \ object name + '.' + field"
+        context:
+          type: object
+          additionalProperties:
+            type: string
+          description: Context can be anything used to construct localised messages.
+    Name:
+      maxLength: 50
+      type: string
+      description: The name of an item.
+    Description:
+      maxLength: 255
+      type: string
+      description: This gives a more in detailed description of the item and its purpose.
+    Rank:
+      minimum: 1
+      type: integer
+      description: The rank determines which item takes precedence over another. 1
+        means highest precedence and 100 takes lower precedence than 10. Must be unique!
+      format: int32
+    Additions:
+      title: Additions
+      type: object
+      additionalProperties:
+        type: string
+      description: Additional properties
+    ApprovalTypeDto:
+      required:
+        - id
+        - name
+        - rank
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        rank:
+          $ref: '#/components/schemas/Rank'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "An approval type, also known as approval level, is used to allow\
+        \ a hierarchy of approvals to grant to various users or groups to allow complex\
+        \ policies to be defined."
+    Uuid:
+      pattern: "^[0-9a-fA-F]{8}-?[0-9a-fA-F]{4}-?[1-5][0-9a-fA-F]{3}-?[89abAB][0-9a-fA-F]{3}-?[0-9a-fA-F]{12}$"
+      type: string
+      description: "Universal Unique Identifier, "
+    PresentationApprovalTypeAssignmentDto:
+      required:
+        - approvalTypeId
+        - jobProfileId
+      type: object
+      properties:
+        approvalTypeId:
+          $ref: '#/components/schemas/Uuid'
+        jobProfileId:
+          $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A single assignment of an approval type to a job profile.
+    SuccessCount:
+      minimum: 0
+      type: integer
+      description: Number of items processed successfully.
+      format: int32
+    Id:
+      maxLength: 36
+      minLength: 1
+      type: string
+      description: A simple definition for an internal identifier. Can be UUID but
+        doesn't have to.
+    PresentationAssignedApprovalTypeDto:
+      required:
+        - approvalType
+        - jobProfileId
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        jobProfileId:
+          $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A single assignment of an approval type to a job profile.
+    FunctionName:
+      maxLength: 32
+      type: string
+      description: This is the name of the business function.
+    ApprovalDto:
+      required:
+        - createdAt
+        - function
+        - id
+        - itemId
+        - records
+        - resource
+        - serviceAgreementId
+        - status
+        - userId
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        itemId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+        records:
+          type: array
+          description: A list of records of all the actions users may have performed
+            on the approval request.
+          items:
+            $ref: '#/components/schemas/RecordDto'
+        canApprove:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can approve it, depending on the policy\
+            \ that applies."
+        canReject:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can reject it, depending on the policy\
+            \ that applies."
+        finalApprover:
+          type: boolean
+          description: This flag indicates if the user (with his current context)
+            is the final approver that is needed.
+        action:
+          $ref: '#/components/schemas/Action'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        externalUserId:
+          $ref: '#/components/schemas/ExternalUserId'
+        userFullName:
+          $ref: '#/components/schemas/FullName'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: An approval request that holds all the details of a single item
+        to be approved.
+    ResourceName:
+      maxLength: 32
+      type: string
+      description: This is the name of the resource.
+    ApprovalStatus:
+      type: string
+      description: The status of the approval.
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - CANCELLED
+    RecordDto:
+      required:
+        - approvalTypeId
+        - createdAt
+        - id
+        - status
+        - userId
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        approvalTypeId:
+          $ref: '#/components/schemas/Uuid'
+        status:
+          $ref: '#/components/schemas/RecordStatus'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        comment:
+          $ref: '#/components/schemas/Comment'
+        externalUserId:
+          $ref: '#/components/schemas/ExternalUserId'
+        userFullName:
+          $ref: '#/components/schemas/FullName'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A single record of either an approval or rejection by a user on
+        an approval request.
+    RecordStatus:
+      type: string
+      description: The list of accepted statuses that a user can request to update
+        an approval to.
+      enum:
+        - APPROVED
+        - REJECTED
+    CreatedAt:
+      type: string
+      description: The timestamp indicates when the object was created.
+      format: date-time
+    Comment:
+      maxLength: 140
+      type: string
+      description: "When approving or rejecting, the user can add comments which would\
+        \ explain the reason for the action."
+    ExternalUserId:
+      maxLength: 64
+      type: string
+      description: The (unique and human readable) external user id of the user.
+    FullName:
+      maxLength: 255
+      minLength: 1
+      type: string
+      description: The full name of a user.
+    Action:
+      maxLength: 20
+      type: string
+      description: The action of the approval request
+    Currency:
+      $ref: '#/components/schemas/currency'
+    currency:
+      title: Currency
+      required:
+        - amount
+        - currencyCode
+      type: object
+      properties:
+        amount:
+          maximum: 1.0E+18
+          minimum: -1.0E+18
+          type: string
+          description: The amount in the specified currency
+        currencyCode:
+          pattern: "^[A-Z]{3}$"
+          type: string
+          description: The alpha-3 code (complying with ISO 4217) of the currency
+            that qualifies the amount
+        additions:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional properties
+    ConfirmationDetails:
+      type: object
+      properties:
+        callbackUrl:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: This is the URL that is called by the Confirmation service
+            when the status of the Confirmation changes.
+        confirmationType:
+          maxLength: 55
+          minLength: 1
+          type: string
+          description: Defined by the domain Capability. Allows subscribing Capabilities
+            to discriminate between their data and that created by other Capabilities.
+        transactionData:
+          maxProperties: 40
+          minProperties: 1
+          type: object
+          additionalProperties:
+            type: string
+          description: "A collection of transaction data points for the confirmation,\
+            \ in the form of key-value pairs."
+        confirmationId:
+          maxLength: 36
+          minLength: 1
+          type: string
+          description: Confirmation Id. Can be passed to skip confirmation on approvals
+            side.
+      description: The object describing confirmation details.
+    PresentationApprovalDetailDto:
+      required:
+        - approvalTypes
+        - createdAt
+        - function
+        - id
+        - itemId
+        - records
+        - resource
+        - serviceAgreementId
+        - status
+        - userId
+      properties:
+        approvalTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalTypeDto'
+        policy:
+          $ref: '#/components/schemas/PolicyDetailsDto'
+        id:
+          $ref: '#/components/schemas/Uuid'
+        userId:
+          $ref: '#/components/schemas/Id'
+        serviceAgreementId:
+          $ref: '#/components/schemas/Id'
+        itemId:
+          $ref: '#/components/schemas/Id'
+        dataAccessItemId:
+          $ref: '#/components/schemas/Id'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        function:
+          $ref: '#/components/schemas/FunctionName'
+        status:
+          $ref: '#/components/schemas/ApprovalStatus'
+        records:
+          type: array
+          description: A list of records of all the actions users may have performed
+            on the approval request.
+          items:
+            $ref: '#/components/schemas/RecordDto'
+        canApprove:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can approve it, depending on the policy\
+            \ that applies."
+        canReject:
+          type: boolean
+          description: "This flag indicates if the user (with his current context)\
+            \ that is requesting the approval can reject it, depending on the policy\
+            \ that applies."
+        finalApprover:
+          type: boolean
+          description: This flag indicates if the user (with his current context)
+            is the final approver that is needed.
+        action:
+          $ref: '#/components/schemas/Action'
+        createdAt:
+          $ref: '#/components/schemas/CreatedAt'
+        externalUserId:
+          $ref: '#/components/schemas/ExternalUserId'
+        userFullName:
+          $ref: '#/components/schemas/FullName'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A detailed approval object that holds extended details of a single
+        item to be approved.
+    RecordStatusCode:
+      type: string
+      description: "This reflects the approval record status reason. If this field\
+        \ is set and confirmation flow is disabled, the approval record will be created\
+        \ with PROCESSING status and with this status code."
+    JobProfilesSummaryDto:
+      required:
+        - jobProfiles
+        - userId
+      type: object
+      properties:
+        userId:
+          $ref: '#/components/schemas/Id'
+        jobProfiles:
+          type: array
+          description: the list of applicable job profiles for this user and service
+            agreement.
+          items:
+            $ref: '#/components/schemas/JobProfileDto'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This object describes the job profiles in the context of the given
+        user and service agreement.
+    JobProfileDto:
+      required:
+        - businessFunctions
+        - dataAccessItemIds
+        - jobProfileId
+      type: object
+      properties:
+        jobProfileId:
+          $ref: '#/components/schemas/Id'
+        businessFunctions:
+          minItems: 1
+          type: array
+          description: The set of business functions (with the 'approve' privilege)
+            in the job profile that applies to the set of data access items.
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        dataAccessItemIds:
+          minItems: 0
+          type: array
+          description: The list of item ids. This is ignored if the approval does
+            not have a dataAccessItemId.
+          items:
+            $ref: '#/components/schemas/Id'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: The job profile describes which combinations of business functions
+        and data access items have the approve privilege.
+    ApprovalRecordStatus:
+      type: string
+      description: The list of approval record statuses.
+      enum:
+        - INITIATED
+        - PROCESSING
+        - SUCCESS
+        - FAILED
+    CreatePolicyItemDto:
+      required:
+        - approvalTypeId
+        - numberOfApprovals
+      type: object
+      properties:
+        approvalTypeId:
+          $ref: '#/components/schemas/Uuid'
+        numberOfApprovals:
+          $ref: '#/components/schemas/NumberOfApprovals'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "A policy item defines how many approvals, of what approval type\
+        \ are needed."
+    NumberOfApprovals:
+      maximum: 99
+      minimum: 1
+      type: integer
+      description: The number of a certain type of approval that is required.
+      format: int32
+    LogicalPolicyItemDto:
+      type: object
+      properties:
+        rank:
+          minimum: 1
+          type: integer
+          description: Rank of this logical operation with 1 as the highest precedence.
+            The rank must be unique inside the create request.
+          format: int32
+        operator:
+          $ref: '#/components/schemas/LogicalOperator'
+        items:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: List of policy items inside this logical operation.
+          items:
+            $ref: '#/components/schemas/CreatePolicyItemDto'
+          default: [ ]
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A policy declaration that allows you to add logical operators to
+        the contained policy items.
+    LogicalOperator:
+      type: string
+      description: "Type of logical operation, please see Community for each operation\
+        \ implementation"
+      enum:
+        - OR
+    PolicyDetailsDto:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        name:
+          $ref: '#/components/schemas/Name'
+        description:
+          $ref: '#/components/schemas/Description'
+        items:
+          maxItems: 50
+          minItems: 0
+          type: array
+          description: A list of approval types and the number of each approval type
+            is required. If there are 0 items it acts as a zero-approval policy.
+          items:
+            $ref: '#/components/schemas/PolicyItemDetailsDto'
+          default: [ ]
+        logicalItems:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: A list of policy items that have some logic attached to them.
+          items:
+            $ref: '#/components/schemas/LogicalPolicyDetailsDto'
+          default: [ ]
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: "The policy defines the rules to determine when an item is fully\
+        \ approved. This policy contains the full details, including the approval\
+        \ type of each policy item."
+    PolicyItemDetailsDto:
+      required:
+        - approvalType
+        - numberOfApprovals
+      type: object
+      properties:
+        approvalType:
+          $ref: '#/components/schemas/ApprovalTypeDto'
+        numberOfApprovals:
+          $ref: '#/components/schemas/NumberOfApprovals'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A detailed policy item with the full approval type.
+    LogicalPolicyDetailsDto:
+      type: object
+      properties:
+        rank:
+          minimum: 0
+          type: integer
+          description: Rank of this logical operation with 1 as the highest precedence.
+            The rank is unique inside the details list.
+          format: int32
+        operator:
+          $ref: '#/components/schemas/LogicalOperator'
+        items:
+          maxItems: 5
+          minItems: 0
+          type: array
+          description: List of policy items inside this logical operation.
+          items:
+            $ref: '#/components/schemas/PolicyItemDetailsDto'
+          default: [ ]
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: A policy declaration that allows you to add logical operators to
+        the contained policy items.
+    PresentationPolicyAssignmentRequest:
+      required:
+        - externalServiceAgreementId
+        - functions
+      type: object
+      properties:
+        externalServiceAgreementId:
+          $ref: '#/components/schemas/ExternalServiceAgreementId'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        functions:
+          maxItems: 50
+          minItems: 1
+          type: array
+          description: Business functions to assign the policy to.
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        bounds:
+          maxItems: 50
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentRequestBounds'
+        dataGroupSpecificBounds:
+          maxItems: 10
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationDataGroupSpecificPolicyAssignmentBulkRequestBounds'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: The policy assignment bulk request.
+    PresentationPolicyAssignmentRequestBounds:
+      required:
+        - policyId
+      type: object
+      properties:
+        policyId:
+          $ref: '#/components/schemas/Uuid'
+        upperBound:
+          $ref: '#/components/schemas/Currency'
+        additions:
+          $ref: '#/components/schemas/Additions'
+    PresentationDataGroupSpecificPolicyAssignmentBulkRequestBounds:
+      required:
+        - bounds
+        - dataGroupIds
+      type: object
+      properties:
+        dataGroupIds:
+          maxItems: 25
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Id'
+        bounds:
+          maxItems: 50
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentRequestBounds'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: This object describes the data group ids and related policy bounds
+        infromation.
+    ExternalServiceAgreementId:
+      maxLength: 64
+      minLength: 1
+      type: string
+      description: A simple definition for an external service agreement identifier.
+    PresentationEntitlementDto:
+      type: object
+      properties:
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        functions:
+          type: array
+          description: List of functions.
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: An item must have either a resource or at least one function.
+    PresentationPolicyAssignmentDto:
+      required:
+        - externalServiceAgreementId
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Uuid'
+        externalServiceAgreementId:
+          $ref: '#/components/schemas/ExternalServiceAgreementId'
+        resource:
+          $ref: '#/components/schemas/ResourceName'
+        functions:
+          type: array
+          description: Business functions to assign the policy to.
+          items:
+            $ref: '#/components/schemas/FunctionName'
+        bounds:
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationPolicyAssignmentRequestBounds'
+        dataGroupSpecificBounds:
+          maxItems: 10
+          minItems: 0
+          type: array
+          items:
+            $ref: '#/components/schemas/PresentationDataGroupSpecificPolicyAssignmentBulkRequestBounds'
+        additions:
+          $ref: '#/components/schemas/Additions'
+      description: The policy assignment.
+  examples:
+    post-approval-type-request:
+      summary: post-approval-type-request
+      value:
+        name: A
+        description: 1st approval
+        rank: 100
+    post-approval-type-response:
+      summary: post-approval-type-response
+      value:
+        approvalType:
+          id: eb00b7da-e360-483a-b383-0591ea9de464
+          name: A
+          description: 1st approval
+          rank: 100
+    post-approval-type-response-not-unique:
+      summary: post-approval-type-response-not-unique
+      value:
+        message: Bad Request
+        errors:
+          - message: Rank not unique
+            key: approvals.api.ApprovalType.NotUnique.rank
+            context:
+              rejectedValue: "1"
+    bad-request-validation-error:
+      summary: bad-request-validation-error
+      value:
+        message: Bad Request
+        errors:
+          - message: "Value Exceeded. Must be between {min} and {max}."
+            key: common.api.shoesize
+            context:
+              max: "50"
+              min: "1"
+    post-approval-type-assignment-bulk-request:
+      summary: post-approval-type-assignment-bulk-request
+      value:
+        approvalTypeAssignments:
+          - approvalTypeId: 41714d3f-cfc1-474e-825e-a372ea79000c
+            jobProfileId: 0f5cfbb507054d589d149e921838dc80
+          - approvalTypeId: 944c27c0-2808-457b-aa13-71ff07c5b536
+            jobProfileId: 1bbd15ccb8c94d3f86d118715eba89ff
+    post-approval-type-assignment-bulk-response:
+      summary: post-approval-type-assignment-bulk-response
+      value:
+        successCount: 2
+    conflict:
+      summary: conflict
+      value:
+        message: Bad request
+        errors:
+          - message: One or more job profiles are already assigned to an approval type
+            key: approval.api.ApprovalTypeAssignmentConflict
+            context:
+              conflictingJobProfileIds: "[0f5cfbb507054d589d149e921838dc80, 1bbd15ccb8c94d3f86d118715eba89ff]"
+    duplicate:
+      summary: duplicate
+      value:
+        message: Bad request
+        errors:
+          - message: Detected duplicate job profile ids
+            key: approval.api.DuplicateJobProfileIds
+            context:
+              duplicateJobProfileIds: "[0f5cfbb507054d589d149e921838dc80]"
+    job-profile-not-found:
+      summary: job-profile-not-found
+      value:
+        message: Bad request
+        errors:
+          - message: Job profile(s) not found
+            key: approval.api.JobProfileNotFound
+            context:
+              InvalidJobProfiles: "[0f5cfbb507054d589d149e921838dc80]"
+    approval-type-not-found:
+      summary: approval-type-not-found
+      value:
+        message: Not found
+        errors:
+          - message: Approval type not found
+            key: approval.api.ApprovalTypeNotFound
+            context:
+              invalidApprovalTypeIds: "[41714d3f-cfc1-474e-825e-a372ea79000c, 944c27c0-2808-457b-aa13-71ff07c5b536]"
+    post-filter-approval-type-assignment-bulk-request:
+      summary: post-filter-approval-type-assignment-bulk-request
+      value:
+        jobProfileIds:
+          - 0f5cfbb507054d589d149e921838dc80
+          - 1bbd15ccb8c94d3f86d118715eba89ff
+    post-filter-approval-type-assignment-bulk-response:
+      summary: post-filter-approval-type-assignment-bulk-response
+      value:
+        approvalTypeAssignments:
+          - approvalType:
+              id: 36676392-68ea-4f59-9031-e6c7e74f23a8
+              name: A
+              description: "The primary approval type, only used by managers"
+              rank: 100
+            jobProfileId: 875d663dbed243d08b54b8d0304606b9
+          - approvalType:
+              id: fdb48a5a-7b82-4149-8b7d-480037af78fc
+              name: B
+              description: "A regular approval type, used by most employees"
+              rank: 200
+            jobProfileId: 772f7772a600453b82a0648949611be8
+    get-approval-type-response:
+      summary: get-approval-type-response
+      value:
+        approvalType:
+          id: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+          name: A
+          description: 1st approval
+          rank: 100
+    not-found-error:
+      summary: not-found-error
+      value:
+        message: Resource not found.
+        errors:
+          - message: "Unable to find the resource requested resource: {resource}."
+            key: common.api.resource
+            context:
+              resource: aResource
+    put-approval-type-assignment:
+      summary: put-approval-type-assignment
+      value:
+        approvalTypeId: 41714d3f-cfc1-474e-825e-a372ea79000c
+    approval-type-not-found-1:
+      summary: approval-type-not-found-1
+      value:
+        message: Bad request
+        errors:
+          - message: Approval type not found
+            key: approval.api.ApprovalTypeNotFound
+            context:
+              invalidApprovalTypeId: 7c59fed4-b737-11e8-96f8-529269fb1459
+    post-approval-response-forbidden:
+      summary: post-approval-response-forbidden
+      value:
+        message: Access to requested resource denied.
+    approval-assignment-not-found:
+      summary: approval-assignment-not-found
+      value:
+        message: Not found
+        errors:
+          - message: Assigned approval type not found
+            key: approval.api.AssignedApprovalTypeNotFound
+            context:
+              jobProfileId: 7c59fed4-b737-11e8-96f8-529269fb1459
+    forbidden-error:
+      summary: forbidden-error
+      value:
+        message: Access to requested resource denied.
+        errors:
+          - message: "Resource access denied due to an insufficient user quota of {quota}."
+            key: common.api.quota
+            context:
+              quota: someQuota
+    simple:
+      summary: simple
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+        dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+        resource: Payments
+        function: SEPA_CT
+        action: CREATE
+        amountDetails:
+          currencyCode: EUR
+          amount: "99.99"
+    pre-approved:
+      summary: pre-approved
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+        dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+        resource: Payments
+        function: SEPA_CT
+        action: CREATE
+        amountDetails:
+          currencyCode: EUR
+          amount: "99.99"
+        approved: true
+    pre-approved-pre-confirmed:
+      summary: pre-approved-pre-confirmed
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+        dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+        resource: Payments
+        function: SEPA_CT
+        action: CREATE
+        amountDetails:
+          currencyCode: EUR
+          amount: "99.99"
+        approved: true
+        confirmationDetails:
+          confirmationId: 436356cg-005v-3566-9at4-a4551d4800gf
+    with-confirmation:
+      summary: with-confirmation
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+        dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+        resource: Payments
+        function: SEPA_CT
+        action: CREATE
+        amountDetails:
+          currencyCode: EUR
+          amount: "99.99"
+        confirmationDetails:
+          transactionData:
+            paymentId: a3a2e499-bd58-4077-9991-19b2559f4796
+            amount: "99.99"
+            currency: EUR
+            counterPartyAccount: NL06ABNA9691012820
+            counterPartyName: Jouk
+          callbackUrl: http://payment-service.local/service-api/v2/payment-orders/confirmations/8a48e1f56e880779016e8809ab970000
+          idpIssuer: http://identity.local/auth/realms/microsphere
+          confirmationType: approve-payment
+    simple-1:
+      summary: simple-1
+      value:
+        approval:
+          id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+          itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+          dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+          resource: Payments
+          function: SEPA_CT
+          amountDetails:
+            currencyCode: EUR
+            amount: "99.99"
+          status: PENDING
+          records: [ ]
+          action: CREATE
+          createdAt: 2018-01-22T13:44:02Z
+    pre-approved-1:
+      summary: pre-approved-1
+      value:
+        approval:
+          id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+          itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+          dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+          resource: Payments
+          function: SEPA_CT
+          amountDetails:
+            currencyCode: EUR
+            amount: "99.99"
+          status: PENDING
+          action: CREATE
+          createdAt: 2018-01-22T13:44:02Z
+          records:
+            - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+              userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+              serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+              approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+              status: APPROVED
+              createdAt: 2018-01-22T13:44:02Z
+    unauthorized-error:
+      summary: unauthorized-error
+      value:
+        challenges:
+          - challengeType: reauth
+            acrValues: txn-signature-silver txn-signature-gold
+            scope: confirmation:3ea92d30-f460-4dde-b40a-e83a2f266a3a
+        data:
+          approvalId: 9E2F9AC5-DD09-40C0-805E-147B0C565901
+          approvalRecordId: DEDFDF28-690E-4B83-8BAF-C8ABF31EF70B
+    post-approval-response-forbidden-1:
+      summary: post-approval-response-forbidden-1
+      value:
+        message: Policy assignment not found
+        errors:
+          - message: Policy assignment not found
+            key: approval.api.PolicyAssignmentNotFound
+            context:
+              remaining.approval.types: "[]"
+              resource.name: Payments
+              function.name: SEPA CT
+    by-id:
+      summary: by-id
+      value:
+        approvalIds:
+          - cda3458b-3a80-4606-b013-29e333f1b5cc
+          - 174511c5-bd87-44a2-9524-e9d06c81d401
+          - 3aa92974-bc77-42ca-a19a-c0958b714491
+          - 5eab4867-24f4-494b-a0bc-c439ec5c0987
+          - 1c6f7d03-b11b-4517-b39d-801eea1efed9
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+    can-approve:
+      summary: can-approve
+      value:
+        canApprove: true
+        canReject: true
+        functions:
+          - SEPA_CT
+          - US_DOMESTIC
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+    by-id-1:
+      summary: by-id-1
+      value:
+        approvals:
+          - id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+            dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+            resource: Payments
+            function: SEPA_CT
+            amountDetails:
+              currencyCode: EUR
+              amount: "99.99"
+            status: PENDING
+            records:
+              - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+                userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                status: APPROVED
+                createdAt: 2018-01-22T13:44:02Z
+            canApprove: false
+            canReject: false
+            finalApprover: false
+            createdAt: 2018-01-22T13:44:02Z
+          - id: 21339aac-9e00-4dd5-9dd9-c9b1727471cf
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: 4af6d50e-cde5-401d-95c9-2a78f51672c9
+            dataAccessItemId: 4f727cdf-426f-42aa-bbf1-6a4548d1d4a9
+            resource: Payments
+            function: US_DOMESTIC
+            amountDetails:
+              currencyCode: USD
+              amount: "99.99"
+            status: PENDING
+            records: [ ]
+            canApprove: true
+            canReject: true
+            finalApprover: true
+            createdAt: 2018-01-22T13:44:02Z
+          - id: f0604fab-9240-43b6-a239-1b43a197d530
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: fba23e7c-3ab8-49ff-96d6-285879049167
+            dataAccessItemId: 17a2a721-cfa5-4bb2-9427-e0b332971a09
+            resource: Payments
+            function: SEPA_CT
+            amountDetails:
+              currencyCode: EUR
+              amount: "99.99"
+            status: REJECTED
+            records:
+              - id: 0829ae58-6080-441c-b590-ac6410d80fc8
+                userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                status: APPROVED
+                createdAt: 2018-01-22T13:44:02Z
+              - id: 22d5f2e7-d7ac-414d-a044-034317f8dd5f
+                userId: 6718a078-7d26-4f39-9902-6a1177d9b84d
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                status: REJECTED
+                createdAt: 2018-01-22T13:44:02Z
+            canApprove: false
+            canReject: false
+            finalApprover: false
+            createdAt: 2018-01-22T13:44:02Z
+          - id: 9544e1b9-2e77-4fb0-ba23-fe6f526e854c
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: 6751dea4-75e2-4a9e-a49c-ee2ae93d4f26
+            dataAccessItemId: 17a2a721-cfa5-4bb2-9427-e0b332971a09
+            resource: Payments
+            function: SEPA_CT
+            amountDetails:
+              currencyCode: EUR
+              amount: "99.99"
+            status: APPROVED
+            records:
+              - id: 1c4f8668-8fb3-43dd-82b1-5627befc7782
+                userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                status: APPROVED
+                createdAt: 2018-01-22T13:44:02Z
+              - id: 22d5f2e7-d7ac-414d-a044-034317f8dd5f
+                userId: 6718a078-7d26-4f39-9902-6a1177d9b84d
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                status: APPROVED
+                createdAt: 2018-01-22T13:44:02Z
+            canApprove: false
+            canReject: true
+            finalApprover: false
+            createdAt: 2018-01-22T13:44:02Z
+    can-approve-1:
+      summary: can-approve-1
+      value:
+        approvals:
+          - id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+            dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+            resource: Payments
+            function: SEPA_CT
+            amountDetails:
+              currencyCode: EUR
+              amount: "99.99"
+            status: PENDING
+            records:
+              - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+                userId: fc546710-cb4d-40a2-9a5c-52f6772a907b
+                serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+                approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+                status: APPROVED
+                createdAt: 2018-01-22T13:44:02Z
+            canApprove: true
+            canReject: true
+            finalApprover: true
+            createdAt: 2018-01-22T13:44:02Z
+          - id: 21339aac-9e00-4dd5-9dd9-c9b1727471cf
+            userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+            serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            itemId: 4af6d50e-cde5-401d-95c9-2a78f51672c9
+            dataAccessItemId: 4f727cdf-426f-42aa-bbf1-6a4548d1d4a9
+            resource: Payments
+            function: US_DOMESTIC
+            amountDetails:
+              currencyCode: USD
+              amount: "99.99"
+            status: PENDING
+            records: [ ]
+            canApprove: true
+            canReject: true
+            finalApprover: false
+            createdAt: 2018-01-22T13:44:02Z
+        cursor: 3aa95dcf-fba8-41b8-a97b-bfae602e1a7d
+    invalid-cursor:
+      summary: invalid-cursor
+      value:
+        message: Approval not found
+        errors:
+          - message: Approval not found
+            key: approval.api.ApprovalNotFound
+            context:
+              cursor: b0149456-9fee-4ad1-8f2b-a78216ae8825
+    invalid-request:
+      summary: invalid-request
+      value:
+        message: Request should either contain a list of approval ids; or canApprove=true
+          and canReject=true
+        errors:
+          - message: Request should either contain a list of approval ids; or canApprove=true
+              and canReject=true
+            key: approval.api.filterApprovals.InvalidRequest
+    post-filter-approvals-response-forbidden-insufficient-permissions:
+      summary: post-filter-approvals-response-forbidden-insufficient-permissions
+      value:
+        message: Insufficient permissions to filter for approvals
+        errors:
+          - message: Insufficient permissions to filter for approvals
+            key: approval.api.filterApprovals.InsufficientPermissions
+    post-verify-approval-request:
+      summary: post-verify-approval-request
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+        resource: Payments
+        function: SEPA_CT
+        amountDetails:
+          currencyCode: EUR
+          amount: "99.99"
+    post-verify-approval-response:
+      summary: post-verify-approval-response
+      value:
+        canApprove: true
+        finalApprover: false
+    get-approval-details-response:
+      summary: get-approval-details-response
+      value:
+        approvalDetails:
+          id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          userFullName: Paddy Brian
+          externalUserId: paddy-brian
+          serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+          itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+          dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+          resource: Payments
+          function: SEPA_CT
+          status: PENDING
+          createdAt: 2018-07-22T13:44:02Z
+          records:
+            - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+              userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+              serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+              externalUserId: robin-green
+              userFullName: Robin Green
+              approvalTypeId: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+              status: APPROVED
+              createdAt: 2018-01-22T13:44:02Z
+          approvalTypes:
+            - id: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+              name: A
+              description: 1st approval
+              rank: 100
+            - id: 5fa97eb5-277f-4b2c-b05d-f13d630e05c8
+              name: B
+              description: 2nd approval
+              rank: 101
+          policy:
+            id: 6546c424-d3b1-4848-bbda-31cd44ab6915
+            name: Default policy
+            description: "A default policy that requires two approvals of different\
+              \ types: A + B"
+            items:
+              - approvalTypeId: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+                approvalType:
+                  id: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+                  name: A
+                  description: 1st approval
+                  rank: 100
+                numberOfApprovals: 1
+              - approvalTypeId: 5fa97eb5-277f-4b2c-b05d-f13d630e05c8
+                approvalType:
+                  id: 5fa97eb5-277f-4b2c-b05d-f13d630e05c8
+                  name: B
+                  description: 2nd approval
+                  rank: 101
+                numberOfApprovals: 1
+          canApprove: false
+          canReject: false
+          finalApprover: false
+    post-filter-approval-details-request:
+      summary: post-filter-approval-details-request
+      value:
+        jobProfilesSummary:
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          jobProfiles:
+            - jobProfileId: 2b37748fb8104fccb834119d1a8837b5
+              businessFunctions:
+                - US_DOMESTIC
+              dataAccessItemIds:
+                - 258cb030-7678-416b-9522-45dd0ef186f3
+            - jobProfileId: 706a7699-ad29-428a-91b6-2eb022b05c1a
+              businessFunctions:
+                - US_DOMESTIC
+                - US_INTERNATIONAL
+              dataAccessItemIds:
+                - 258cb030-7678-416b-9522-45dd0ef186f3
+    post-filter-approval-details-response:
+      summary: post-filter-approval-details-response
+      value:
+        approvalDetails:
+          id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+          itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+          dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+          resource: Payments
+          function: SEPA_CT
+          amountDetails:
+            currencyCode: EUR
+            amount: "99.99"
+          status: PENDING
+          createdAt: 2018-07-22T13:44:02Z
+          records:
+            - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+              userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+              serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+              approvalTypeId: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+              status: APPROVED
+              createdAt: 2018-01-22T13:44:02Z
+          approvalTypes:
+            - id: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+              name: A
+              description: 1st approval
+              rank: 100
+            - id: 5fa97eb5-277f-4b2c-b05d-f13d630e05c8
+              name: B
+              description: 2nd approval
+              rank: 101
+          policy:
+            id: 6546c424-d3b1-4848-bbda-31cd44ab6915
+            name: Default policy
+            description: "A default policy that requires two approvals of different\
+              \ types: A + B"
+            items:
+              - approvalType:
+                  id: ed47a5d7-1626-4e8c-819c-8c1851cb0357
+                  name: A
+                  description: 1st approval
+                  rank: 100
+                numberOfApprovals: 1
+              - approvalType:
+                  id: 5fa97eb5-277f-4b2c-b05d-f13d630e05c8
+                  name: B
+                  description: 2nd approval
+                  rank: 101
+                numberOfApprovals: 1
+          canApprove: false
+          canReject: false
+          finalApprover: false
+    put-update-status-request:
+      summary: put-update-status-request
+      value:
+        status: CANCELLED
+    put-update-status-request-bad-request:
+      summary: put-update-status-request-bad-request
+      value:
+        message: Bad Request
+        errors:
+          - message: Status can not be updated
+            key: approvals.api.Approval.status
+            context:
+              rejectedValue: PENDING
+    post-approval-record-request:
+      summary: post-approval-record-request
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        status: APPROVED
+    post-approval-record-request-with-confirmation:
+      summary: post-approval-record-request-with-confirmation
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        status: APPROVED
+        confirmationDetails:
+          transactionData:
+            paymentId: a3a2e499-bd58-4077-9991-19b2559f4796
+            amount: "99.99"
+            currency: EUR
+            counterPartyAccount: NL06ABNA9691012820
+            counterPartyName: Jouk
+          callbackUrl: http://payment-service.local/service-api/v2/payment-orders/confirmations/8a48e1f56e880779016e8809ab970000
+          idpIssuer: http://identity.local/auth/realms/microsphere
+          confirmationType: approve-payment
+    post-approval-record-request-pre-confirmed:
+      summary: post-approval-record-request-pre-confirmed
+      value:
+        userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+        serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        status: APPROVED
+        confirmationDetails:
+          confirmationId: 436356cg-005v-3566-9at4-a4551d4800gf
+    post-approval-record-response:
+      summary: post-approval-record-response
+      value:
+        approval:
+          id: b3e4692d-6772-4fb2-9446-b8f4607f49b1
+          userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+          serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+          itemId: 4cf9a1da-2f48-4f9b-8a97-204c8cd43aa0
+          dataAccessItemId: 975809ca-008c-4732-9ae0-a2531d4800bc
+          resource: Payments
+          function: SEPA_CT
+          amountDetails:
+            currencyCode: EUR
+            amount: "99.99"
+          status: PENDING
+          records:
+            - id: 59f23015-9007-4391-a604-1d17e85ab3c0
+              userId: 606d4532-f8d9-4a5f-840a-887baf88fa24
+              serviceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+              approvalTypeId: 8b4cf4ba-1b6d-43fe-bb44-3c762e0ba5c1
+              status: APPROVED
+              createdAt: 2018-01-22T13:44:02Z
+          canApprove: false
+          canReject: false
+          finalApprover: false
+          createdAt: 2018-01-22T13:44:02Z
+    reauth-unauthorized-error:
+      summary: reauth-unauthorized-error
+      value:
+        challenges:
+          - challengeType: reauth
+            acrValues: txn-signature-silver txn-signature-gold
+            scope: confirmation:3ea92d30-f460-4dde-b40a-e83a2f266a3a
+        data:
+          approvalId: 9E2F9AC5-DD09-40C0-805E-147B0C565901
+          approvalRecordId: DEDFDF28-690E-4B83-8BAF-C8ABF31EF70B
+    missing-job-profile-with-function:
+      summary: missing-job-profile-with-function
+      value:
+        message: User does not have job profile with function
+        errors:
+          - message: User does not have job profile with function
+            key: approval.api.UpdateApproval.MissingJobProfileWithFunction
+            context:
+              remaining.approval.types: "[ApprovalType(id=9559d2c6-03ae-4a00-9920-a6d2d0d6614d,\
+              \ name=A, rank=636343623)]"
+              resource.name: Payments
+              function.name: SEPA CT
+    missing-job-profile-with-data-access:
+      summary: missing-job-profile-with-data-access
+      value:
+        message: User does not have job profile for data access item id and function
+        errors:
+          - message: User does not have job profile for data access item id and function
+            key: approval.api.UpdateApproval.MissingJobProfileWithDataAccessItemId
+            context:
+              remaining.approval.types: "[ApprovalType(id=9559d2c6-03ae-4a00-9920-a6d2d0d6614d,\
+              \ name=A, rank=636343623)]"
+              resource.name: Payments
+              function.name: SEPA CT
+    missing-required-approval-type:
+      summary: missing-required-approval-type
+      value:
+        message: "Not allowed to update this approval, missing required approval type"
+        errors:
+          - message: "Not allowed to update this approval, missing required approval\
+            \ type"
+            key: approval.api.UpdateApproval.MissingRequiredApprovalType
+            context:
+              remaining.approval.types: "[ApprovalType(id=9559d2c6-03ae-4a00-9920-a6d2d0d6614d,\
+              \ name=A, rank=636343623)]"
+              resource.name: Payments
+              function.name: SEPA CT
+    missing-policy-assignment:
+      summary: missing-policy-assignment
+      value:
+        message: Policy assignment not found
+        errors:
+          - message: Policy assignment not found
+            key: approval.api.PolicyAssignmentNotFound
+            context:
+              remaining.approval.types: "[]"
+              resource.name: Payments
+              function.name: SEPA CT
+    invalid-approval-status:
+      summary: invalid-approval-status
+      value:
+        message: "Not allowed to update this approval, status is final"
+        errors:
+          - message: "Not allowed to update this approval, status is final"
+            key: approval.api.UpdateApproval.FinalStatus
+            context:
+              status: APPROVED
+    already-updated:
+      summary: already-updated
+      value:
+        message: Not allowed to update this approval twice
+        errors:
+          - message: Not allowed to update this approval twice
+            key: approval.api.UpdateApproval.AlreadyApprovedByUser
+    post-approval-record-status-request:
+      summary: post-approval-record-status-request
+      value:
+        status: PROCESSING
+        statusCode: LIMITS_PENDING
+    invalid-record-status:
+      summary: invalid-record-status
+      value:
+        message: "Not allowed to update this approval record, status is final"
+        errors:
+          - message: "Not allowed to update this approval record, status is final"
+            key: approval.api.UpdateApprovalRecord.FinalStatus
+            context:
+              status: SUCCESS
+    post-policy-request:
+      summary: post-policy-request
+      value:
+        name: Simple policy
+        description: "A basic policy, requires one approval of type 'A' and one of\
+          \ type 'B'."
+        items:
+          - approvalTypeId: 748fef85-2a7a-47fa-b016-7cae583a0b79
+            numberOfApprovals: 1
+          - approvalTypeId: 9c666d9e-92d4-4d8f-9366-a4d3ee336c0c
+            numberOfApprovals: 1
+    post-policy-response:
+      summary: post-policy-response
+      value:
+        policy:
+          id: 6546c424-d3b1-4848-bbda-31cd44ab6915
+          name: Simple policy
+          description: "A basic policy, requires one approval of type 'A' and one\
+            \ of type 'B'."
+          items:
+            - approvalType:
+                id: 748fef85-2a7a-47fa-b016-7cae583a0b79
+                name: A
+                description: 1st approval
+                rank: 100
+              numberOfApprovals: 1
+            - approvalType:
+                id: 9c666d9e-92d4-4d8f-9366-a4d3ee336c0c
+                name: B
+                description: 2nd approval
+                rank: 200
+              numberOfApprovals: 1
+    post-policy-response-bad-request:
+      summary: post-policy-response-bad-request
+      value:
+        message: Approval type(s) not found
+        errors:
+          - message: Approval type(s) not found
+            key: approval.api.ApprovalTypeNotFound
+            context:
+              invalidApprovalTypeIds: "[ed47a5d7-1626-4e8c-819c-8c1851cb0357, 5fa97eb5-277f-4b2c-b05d-f13d630e05c8]"
+    delete-policy-assignment-response:
+      summary: delete-policy-assignment-response
+      value:
+        numberOfRowsAffected: 2
+    post-filter-policy-assignment-request:
+      summary: post-filter-policy-assignment-request
+      value:
+        externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+        entitlements:
+          - resource: Payments
+            functions:
+              - SEPA CT
+          - resource: Contacts
+          - functions:
+              - US_DOMESTIC
+              - US_INTERNATIONAL
+    post-filter-policy-assignment-response:
+      summary: post-filter-policy-assignment-response
+      value:
+        policyAssignments:
+          - id: 6546c424-d3b1-4848-bbda-31cd44ab6916
+            externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            function: SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+                upperBound:
+                  amount: "200.00"
+                  currencyCode: EUR
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf15
+                upperBound:
+                  amount: "100.00"
+                  currencyCode: EUR
+          - id: 6546c424-d3b1-4848-bbda-31cd44ab6917
+            externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            function: SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+                upperBound:
+                  amount: "200.00"
+                  currencyCode: EUR
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf15
+                upperBound:
+                  amount: "100.00"
+                  currencyCode: EUR
+            dataGroupSpecificBounds:
+              - dataGroupIds:
+                  - 8a49404e7750618601775066a0130006
+                  - 8a49404e7750618601775066f3c60008
+                bounds:
+                  - policyId: 44cdae55-4bed-416b-b3d0-482091c5142b
+                    upperBound:
+                      amount: "100"
+                      currencyCode: EUR
+                  - policyId: fad909ed-ce43-466c-800e-6a3f1c9d9ba7
+                    upperBound:
+                      amount: "200"
+                      currencyCode: EUR
+    unbounded:
+      summary: unbounded
+      value:
+        policyAssignments:
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            functions:
+              - SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+    bounded:
+      summary: bounded
+      value:
+        policyAssignments:
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            functions:
+              - SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf15
+                upperBound:
+                  amount: "100.00"
+                  currencyCode: EUR
+    bounded-multi:
+      summary: bounded-multi
+      value:
+        policyAssignments:
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            functions:
+              - SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+                upperBound:
+                  amount: "200.00"
+                  currencyCode: EUR
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf15
+                upperBound:
+                  amount: "100.00"
+                  currencyCode: EUR
+    multi-resources:
+      summary: multi-resources
+      value:
+        policyAssignments:
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            functions:
+              - SEPA CT
+              - Domestic Wire
+              - Foreign wire
+              - External A2A
+              - ACH Credit
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+                upperBound:
+                  amount: "200.00"
+                  currencyCode: EUR
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf15
+                upperBound:
+                  amount: "100.00"
+                  currencyCode: EUR
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Contacts
+            functions:
+              - Contacts
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-eaeaeaeaeaea
+    data-group-specific-bounds:
+      summary: data-group-specific-bounds
+      value:
+        policyAssignments:
+          - externalServiceAgreementId: c3f62ff9-2894-47d9-a34a-2c8b54e6e9be
+            resource: Payments
+            functions:
+              - SEPA CT
+            bounds:
+              - policyId: 75419243-3d83-40ce-98b2-d2313bf3cf13
+            dataGroupSpecificBounds:
+              - dataGroupIds:
+                  - 8a49404e7750618601775066a0130006
+                  - 8a49404e7750618601775066f3c60008
+                bounds:
+                  - policyId: 44cdae55-4bed-416b-b3d0-482091c5142b
+                    upperBound:
+                      amount: "100"
+                      currencyCode: EUR
+                  - policyId: fad909ed-ce43-466c-800e-6a3f1c9d9ba7
+                    upperBound:
+                      amount: "200"
+                      currencyCode: EUR
+    policy-not-found:
+      summary: policy-not-found
+      value:
+        message: Policy not found
+        errors:
+          - message: Policy not found
+            key: approval.api.PolicyNotFound
+            context:
+              policy id: 7d466fef-de4d-48f2-8e72-c31ca5774b5a
+    duplicate-1:
+      summary: duplicate-1
+      value:
+        message: Policy assignment already exists
+        errors:
+          - message: Policy assignment already exists
+            key: approval.api.PolicyAssignmentAlreadyExists
+            context:
+              policy id: b212069e-b6e3-4b40-add3-80f1b12d67a6
+              service agreement id: 8a48e61a69918d12016994f9d9160001
+              business function: SEPA CT
+    unbounded-duplicate:
+      summary: unbounded-duplicate
+      value:
+        message: Policy assignment with no bounds already exists
+        errors:
+          - message: Policy assignment with no bounds already exists
+            key: approval.api.PolicyAssignmentAlreadyUnbounded
+            context:
+              policy id: b212069e-b6e3-4b40-add3-80f1b12d67a6
+              service agreement id: 8a48e61a69918d12016994f9d9160001
+              business function: SEPA CT
+    invalid-bound:
+      summary: invalid-bound
+      value:
+        message: Policy assignment has invalid bounds
+        errors:
+          - message: Policy assignment has invalid bounds
+            key: approval.api.PolicyAssignmentInvalidBound
+            context:
+              amount: "-10"

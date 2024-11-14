@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.microsphere.bank.common.client.api.client.resttemplate.configuration.RestTemplateClientConfigurator

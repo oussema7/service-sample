@@ -1,0 +1,601 @@
+openapi: 3.0.3
+info:
+  title: Legal Entity Name client API
+  description: "OpenApi Endpoints for managing Legal Entities Ancestors.\n"
+  license:
+    name: Copyright MicroSphere 2020
+    url: https://www.microsphere.com
+  version: v2
+servers:
+  - url: /serviceName/
+    description: The server
+tags:
+  - name: verify Legal Entity Client API
+paths:
+  /service-api/v2/subscriptions/service-agreement/{serviceAgreementId}:
+    summary: get subscription by service agreement id
+    description: get subscription by service agreement id
+    get:
+      tags:
+        - subscriptions
+      summary: get subscription by service agreement id
+      description: get subscription by service agreement id
+      operationId: getSubscriptionByServiceAgreementId
+      parameters:
+        - name: serviceAgreementId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionResponse'
+  /client-api/v2/verify-customer:
+    summary: verify Legal Entity by externalID
+    description: Search Legal Entity by externalID
+    get:
+      tags:
+        - onboarding
+      summary: Search Legal Entity by externalID
+      description: Search Legal Entity by externalID
+      operationId: searchLegalEntity
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegalEntityTypePostResponse'
+    parameters:
+      - name: legalEntityExternalId
+        in: query
+        description: Legal Entity External Id
+        required: true
+        schema:
+          maxLength: 50
+          minLength: 1
+          type: string
+        examples:
+          example:
+            summary: entity external Id
+  /client-api/v2/confirm-le-subscription:
+    summary: confirmation of LE subscription
+    description: persist LE on database
+    post:
+      tags:
+        - onboarding
+      summary: Confirm Legal Entity creation
+      description: Persist Legal Entity
+      operationId: persistLegalEntity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LegalEntityPostRequest'
+      responses:
+        "200":
+          description: LE successfully saved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegalEntityIdResponse'
+  /client-api/v2/retry-subscription:
+    summary: Retry subscription in case of failure
+    description: Retry subscription in case of failure
+    post:
+      tags:
+        - subscriptions
+      summary: Retry subscription in case of failure
+      description: Retry subscription in case of failure
+      operationId: retrySubscription
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subscriptionResponseBody'
+      parameters:
+        - name: subscriptionId
+          in: query
+          description: legal entity external id
+          required: true
+          schema:
+            type: string
+  /client-api/v2/resiliate-subscription:
+    summary: Resiliate subscription
+    description: Resiliate subscription
+    put:
+      tags:
+        - subscriptions
+      summary: Resiliate subscription
+      description: Resiliate subscription
+      operationId: resiliateSubscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/resiliationPutRequest'
+      responses:
+        "200":
+          description: "subscription resiliated successfully"
+        "404":
+          description: "legal entity not found"
+
+
+  /client-api/v2/getAllSubscriptions:
+    summary: get all subscriptions
+    description: get all subscriptions
+    get:
+      tags:
+        - subscriptions
+      operationId: getAllSubscriptions
+      responses:
+        "200":
+          description: "subscriptions retrieved"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subscriptionsPage'
+    parameters:
+      - name: page
+        in: query
+        description: page number
+        required: true
+        schema:
+          minLength: 1
+          type: integer
+      - name: size
+        in: query
+        description: page size
+        required: true
+        schema:
+          type: integer
+      - name: query
+        in: query
+        description: The search term used to search for sweep rules
+        required: false
+        schema:
+          type: string
+
+  /client-api/v2/getSubscriptionById:
+    summary: Get subscription by id
+    description: Get subscription workflow steps by id
+    get:
+      tags:
+        - subscriptions
+      summary: Get subscription by id
+      description: Get subscription workflow steps by id
+      operationId: getSubscriptionById
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/subscriptionResponseBody'
+    parameters:
+      - name: subscriptionId
+        in: query
+        description: subscription id
+        required: true
+        schema:
+          type: string
+  /client-api/v2/subscriptions/{id}:
+    summary: update subscription
+    put:
+      tags:
+        - subscriptions
+      summary: update subscription
+      description: update subscription
+      operationId: updateSubscriptionById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscriptionRequestBody'
+      responses:
+        "200":
+          description: subscription updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/subscriptionResponseBody"
+        "400":
+          description: subscription not found
+
+  /client-api/v2/commercial-cards:
+    summary: get commercial card
+    description: get commercial card by offer
+    get:
+      tags:
+        - onboarding
+      summary: get commercial card by offer
+      description: get commercial card by offer
+      operationId: getCommercialCard
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commercialCardResponseGet'
+    parameters:
+      - name: offer
+        in: query
+        description: commercial card offer
+        required: false
+        schema:
+          type: string
+          enum:
+            - STANDARD
+            - PREMIUM
+      - name: localize
+        in: query
+        description: language of commercial card
+        required: false
+        schema:
+          type: string
+          enum:
+            - fr
+            - en
+  /client-api/v2/subscriptions/{subscriptionId}/unassing-job-roles:
+    post:
+      summary: Get users under SA with their permission set
+      description: No description available
+      tags:
+        - subscriptions
+      operationId: getUsersWithJobRoles
+      parameters:
+        - name: subscriptionId
+          in: path
+          description: get list of job roles for each user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CardIds"
+      responses:
+        "200":
+          description: list of users with their job roles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserJobRoles"
+  /client-api/v2/legal-entities/{externalId}/billing-accounts:
+    get:
+      summary: Get billing accounts by legalEntity ID
+      description: Returns a list of billing accounts associated with the legal entity external ID provided in the path parameter.
+      tags:
+        - subscriptions
+      operationId: getAccountsByLegalEntityExtId
+      parameters:
+        - name: externalId
+          in: path
+          description: external ID of the legal entity to retrieve billing accounts for.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of billing accounts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/accountDetail"
+        "404":
+          description: The specified legal entity external ID was not found.
+components:
+  schemas:
+    accountList:
+      type: array
+      items:
+        $ref: '#/components/schemas/accountDetail'
+    accountDetail:
+      type: object
+      required:
+        - name
+        - number
+        - ctosNumber
+      properties:
+        name:
+          type: string
+        number:
+          type: string
+        ctosNumber:
+          type: string
+    subscriptionsPage:
+      type: object
+      required:
+        - subscriptionResponseBody
+        - pageNumber
+        - currentPage
+        - totalItems
+      properties:
+        subscriptionResponseBody:
+          type: array
+          items:
+            $ref: '#/components/schemas/subscriptionResponseBody'
+        pageNumber:
+          type: integer
+        currentPage:
+          type: integer
+        totalItems:
+          type: integer
+        totalPages:
+          type: integer
+    subscriptionResponseBody:
+      type: object
+      required:
+        - legalEntityName
+        - legalEntityExtId
+        - offer
+        - status
+        - accountPulled
+        - accountGroupCreated
+        - ibsActivated
+        - subscriptionType
+        - externalSubscriptionId
+        - billingAccount
+        - externalSubscriptionStatus
+        - subscriptionStatus
+      properties:
+        subscriptionId:
+          type: string
+        legalEntityName:
+          type: string
+        legalEntityExtId:
+          type: string
+        offer:
+          type: string
+        status:
+          type: string
+        accountPulled:
+          type: string
+        accountGroupCreated:
+          type: string
+        ibsActivated:
+          type: string
+        subscriptionType:
+          type: string
+        externalSubscriptionId:
+          type: string
+        billingAccount:
+          type: string
+        externalSubscriptionStatus:
+          type: string
+        subscriptionStatus:
+          type: string
+          enum:
+            - ACTIVE
+            - RESCINDED
+            - INACTIVE
+            - ACTIVATION_LOADING
+            - ACTIVATION_FAILED
+        email:
+          type: string
+        cards:
+          type: array
+          items:
+            type: object
+            properties:
+              externalId:
+                type: string
+              nameEn:
+                type: string
+              nameFr:
+                type: string
+    identifier:
+      type: string
+      description: Identifier
+    legalEntityName:
+      type: string
+      description: Identifier
+    legalEntityIdentifier:
+      type: object
+      description: Legal entity identifier
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        externalId:
+          $ref: '#/components/schemas/identifier'
+
+    SubscriptionResponse:
+      type: object
+      required:
+        - legalEntityId
+        - legalEntityExternalId
+        - serviceAgreementId
+        - serviceAgreementExternalId
+        - subscriptionId
+        - subscriptionExternalId
+      properties:
+        legalEntityId:
+          type: string
+        legalEntityExternalId:
+          type: string
+        serviceAgreementId:
+          type: string
+        serviceAgreementExternalId:
+          type: string
+        subscriptionId:
+          type: string
+        subscriptionExternalId:
+          type: string
+    subscriptionRequestBody:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+        email:
+          type: string
+        billingAccount:
+          type: string
+        cardsExternalIds:
+          type: array
+          items:
+            $ref: "#/components/schemas/cardsExternalIds"
+
+      required:
+        - subscriptionId
+        - email
+        - cardsExternalIds
+        - billingAccount
+
+    LegalEntityTypePostResponse:
+      required:
+        - externalId
+        - name
+        - accountList
+      type: object
+      properties:
+        externalId:
+          $ref: '#/components/schemas/identifier'
+        name:
+          $ref: '#/components/schemas/legalEntityName'
+        accountList:
+          $ref: '#/components/schemas/accountList'
+        subscriptionRescinded:
+          type: boolean
+      description: Get legal entity request
+      x-java-type: com.microsphere.dbs.accesscontrolextension.rest.model.LegalEntityTypePostResponse
+    LegalEntityPostRequest:
+      type: object
+      required:
+        - externalId
+        - name
+        - cardsExternalIds
+        - offer
+        - subscriptionType
+        - billingAccount
+      properties:
+        externalId:
+          type: string
+        name:
+          type: string
+        offer:
+          type: string
+        subscriptionType:
+          type: string
+        billingAccount:
+          type: string
+        email:
+          type: string
+        cardsExternalIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/cardsExternalIds'
+    cardsExternalIds:
+      type: string
+    LegalEntityIdResponse:
+      type: object
+      properties:
+        id:
+          type: string
+    resiliationPutRequest:
+      type: object
+      required:
+        - subscriptionId
+        - motive
+      properties:
+        subscriptionId:
+          type: string
+        motive:
+          type: string
+          enum:
+            - CLIENT
+            - ABONNEMENT
+            - AUTOMATIQUE
+
+    commercialCardResponseGet:
+      required:
+        - cards
+      type: object
+      properties:
+        cards:
+          maxItems: 100
+          minItems: 1
+          type: array
+          description: list of commercial-cards.
+          items:
+            $ref: '#/components/schemas/card'
+    card:
+      required:
+        - externalId
+        - cardGroup
+        - name
+        - price
+        - type
+        - description
+        - assignablePermissionSet
+        - businessFunctions
+      type: object
+      properties:
+        externalId:
+          type: string
+        cardGroup:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        type:
+          type: string
+        description:
+          type: string
+        assignablePermissionSet:
+          type: string
+        businessFunctions:
+          type: array
+          description: list of business functions.
+          items:
+            type: string
+    UserJobRoles:
+      type: object
+      properties:
+        usersId:
+          type: string
+        username:
+          type: string
+        fullName:
+          type: string
+        jobRoles:
+          type: array
+          description: list of job roles (function group) assigned to the user
+          items:
+            $ref: "#/components/schemas/FunctionGroupItem"
+    CardIds:
+      type: object
+      properties:
+        ids:
+          type: array
+          items:
+            type: string
+    FunctionGroupItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string

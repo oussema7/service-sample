@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.microsphere.dbs.api</groupId>
+        <artifactId>dbs-specs</artifactId>
+        <version>2022.08-LTS-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>access-control-service-api</artifactId>
+
+    <properties>
+        <spec-file.name>access-control/access-control-service-api-v2.11.1.yaml</spec-file.name>
+        <spec.generated-sources.base-package>com.microsphere.accesscontrol.service
+        </spec.generated-sources.base-package>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

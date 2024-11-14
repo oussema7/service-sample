@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.microsphere.dbs.api</groupId>
+        <artifactId>dbs-specs</artifactId>
+        <version>2022.08-LTS-SNAPSHOT</version>
+    </parent>
+
+    <!-- good practice is to name the artifact after OpenApi specification file name -->
+    <artifactId>corporate-onboarding-client-api</artifactId>
+
+    <properties>
+        <!-- specs properties -->
+        <specs.version>${custom-specs.version}</specs.version>
+        <spec-file.name>corporate-onboarding-client-api.yaml</spec-file.name>
+        <spec.generated-sources.base-package>com.microsphere.onboarding.client
+        </spec.generated-sources.base-package>
+        <skip.api.client.generation>false</skip.api.client.generation>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

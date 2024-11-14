@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="corporate-onboarding-client-api" />
+        <module name="approval-service-api" />
+        <module name="resiliate-subscription-client" />
+        <module name="self-enrolment-ibs-client" />
+        <module name="access-control-service-api" />
+        <module name="holding-subscription-client" />
+        <module name="user-manager-extension-client-api" />
+        <module name="access-control-extension-service-api" />
+        <module name="holding-accounts-client" />
+        <module name="arrangement-service-api" />
+        <module name="legal-entity-client" />
+        <module name="common-client" />
+        <module name="user-manager-service-api" />
+      </profile>
+      <profile name="Annotation profile for Parent project" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.10/lombok-1.18.10.jar" />
+        </processorPath>
+        <module name="dbs-onboarding-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="account-balance-client" target="1.8" />
+      <module name="account-statement-extension-client-api" target="11" />
+      <module name="account-statement-extension-service-api" target="11" />
+      <module name="account-statement-integration-outbound-api" target="11" />
+      <module name="actions-integration-api" target="11" />
+      <module name="actions-service-api" target="11" />
+      <module name="api-client-bom" target="1.8" />
+      <module name="arrangement-integration-outbound-balance-api" target="11" />
+      <module name="arrangement-manager-extension-service-api" target="11" />
+      <module name="audit-service-api" target="11" />
+      <module name="batch-order-client-api" target="11" />
+      <module name="batch-order-download-rejection-client-api" target="11" />
+      <module name="batch-order-scheduled-api" target="11" />
+      <module name="batch-payment-client" target="1.8" />
+      <module name="beneficiary-verification-client" target="1.8" />
+      <module name="biat-api-afb-client" target="1.8" />
+      <module name="biat-api-cards-client" target="1.8" />
+      <module name="biat-api-cards-lockunlock-client" target="1.8" />
+      <module name="biat-api-get-ld-client" target="1.8" />
+      <module name="biat-api-get-mg-client" target="1.8" />
+      <module name="biat-dms-client-api" target="11" />
+      <module name="biat-prefix-check-client" target="1.8" />
+      <module name="bill-payment-client" target="1.8" />
+      <module name="bill-payment-client-api" target="11" />
+      <module name="bill-payment-integration-service-api" target="11" />
+      <module name="bill-payment-order-service-api" target="11" />
+      <module name="bill-payment-T24-client" target="1.8" />
+      <module name="calcul-sdr-client" target="1.8" />
+      <module name="card-balance-client" target="1.8" />
+      <module name="card-manager-travel-notices-client-api" target="11" />
+      <module name="cards-manager-client-api" target="11" />
+      <module name="check-transmitter-code" target="1.8" />
+      <module name="checkbook-manager-client-api" target="11" />
+      <module name="claim-api-client" target="1.8" />
+      <module name="communications-outbound-integration-service-api" target="11" />
+      <module name="confirmation-service-api" target="11" />
+      <module name="contact-manager-client-api" target="11" />
+      <module name="contact-manager-service-api" target="11" />
+      <module name="device-management-service-api" target="11" />
+      <module name="domiciliation-integration-api" target="11" />
+      <module name="exchange-integration-outbound-api" target="11" />
+      <module name="followup-checkbook-T24-client" target="1.8" />
+      <module name="foreign-trade-advance-api" target="1.8" />
+      <module name="foreign-trade-client-api" target="11" />
+      <module name="foreign-trade-T24-client" target="1.8" />
+      <module name="funds-transfer-client" target="1.8" />
+      <module name="identity-extension-client-api" target="11" />
+      <module name="identity-integration-outbound-api" target="11" />
+      <module name="international-batch-payment-client" target="1.8" />
+      <module name="limits-service-api" target="11" />
+      <module name="loan-simulator-api" target="11" />
+      <module name="marketing-service-api" target="11" />
+      <module name="message-center-integration-specification" target="11" />
+      <module name="notification-integration-service-api" target="11" />
+      <module name="notifications-service-api" target="11" />
+      <module name="order-checkbook-T24-client" target="1.8" />
+      <module name="payment-batch-integration-outbound-api" target="11" />
+      <module name="payment-batch-service-api" target="11" />
+      <module name="payment-configuration-service-api" target="11" />
+      <module name="payment-order-extension-service-api" target="11" />
+      <module name="payment-order-integration-outbound-api" target="11" />
+      <module name="payment-order-service-api" target="11" />
+      <module name="phone-payment-charging" target="1.8" />
+      <module name="phone-payment-reverse-T24-client" target="1.8" />
+      <module name="phone-payment-service-api" target="11" />
+      <module name="phone-payment-T24-client" target="1.8" />
+      <module name="places-client-api" target="11" />
+      <module name="places-mxp-client" target="1.8" />
+      <module name="places-t24-client" target="1.8" />
+      <module name="pull-accounts-from-T24-client" target="1.8" />
+      <module name="push-integration-service-api" target="11" />
+      <module name="securities-opcvm-client" target="1.8" />
+      <module name="self-enrolment-client" target="1.8" />
+      <module name="self-enrolment-client-api" target="11" />
+      <module name="self-enrolment-service-api" target="11" />
+      <module name="self-enrolment-subscription-client" target="1.8" />
+      <module name="statements" target="1.8" />
+      <module name="submit-batch-cards" target="1.8" />
+      <module name="submit-batch-debit" target="1.8" />
+      <module name="transaction-download-afb-client-api" target="11" />
+      <module name="transaction-manager-extension-service-api" target="11" />
+      <module name="transaction-manager-persistence-api" target="11" />
+      <module name="transaction-manager-service-api" target="11" />
+      <module name="update-user-t24" target="1.8" />
+      <module name="user-manager-integration-outbound" target="11" />
+      <module name="value-management-client" target="1.8" />
+      <module name="value-management-client-api" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="access-control-extension-service-api" options="-parameters" />
+      <module name="access-control-service-api" options="-parameters" />
+      <module name="account-statement-extension-client-api" options="-parameters" />
+      <module name="account-statement-extension-service-api" options="-parameters" />
+      <module name="account-statement-integration-outbound-api" options="-parameters" />
+      <module name="actions-integration-api" options="-parameters" />
+      <module name="actions-service-api" options="-parameters" />
+      <module name="approval-service-api" options="-parameters" />
+      <module name="arrangement-integration-outbound-balance-api" options="-parameters" />
+      <module name="arrangement-manager-extension-service-api" options="-parameters" />
+      <module name="arrangement-service-api" options="-parameters" />
+      <module name="audit-service-api" options="-parameters" />
+      <module name="batch-order-client-api" options="-parameters" />
+      <module name="batch-order-download-rejection-client-api" options="-parameters" />
+      <module name="batch-order-scheduled-api" options="-parameters" />
+      <module name="biat-dms-client-api" options="-parameters" />
+      <module name="bill-payment-client-api" options="-parameters" />
+      <module name="bill-payment-integration-service-api" options="-parameters" />
+      <module name="bill-payment-order-service-api" options="-parameters" />
+      <module name="card-manager-travel-notices-client-api" options="-parameters" />
+      <module name="cards-manager-client-api" options="-parameters" />
+      <module name="checkbook-manager-client-api" options="-parameters" />
+      <module name="communications-outbound-integration-service-api" options="-parameters" />
+      <module name="confirmation-service-api" options="-parameters" />
+      <module name="contact-manager-client-api" options="-parameters" />
+      <module name="contact-manager-service-api" options="-parameters" />
+      <module name="corporate-onboarding-client-api" options="-parameters" />
+      <module name="dbs-onboarding-service" options="-parameters" />
+      <module name="device-management-service-api" options="-parameters" />
+      <module name="domiciliation-integration-api" options="-parameters" />
+      <module name="exchange-integration-outbound-api" options="-parameters" />
+      <module name="foreign-trade-client-api" options="-parameters" />
+      <module name="identity-extension-client-api" options="-parameters" />
+      <module name="identity-integration-outbound-api" options="-parameters" />
+      <module name="limits-service-api" options="-parameters" />
+      <module name="loan-simulator-api" options="-parameters" />
+      <module name="marketing-service-api" options="-parameters" />
+      <module name="message-center-integration-specification" options="-parameters" />
+      <module name="notification-integration-service-api" options="-parameters" />
+      <module name="notifications-service-api" options="-parameters" />
+      <module name="payment-batch-integration-outbound-api" options="-parameters" />
+      <module name="payment-batch-service-api" options="-parameters" />
+      <module name="payment-configuration-service-api" options="-parameters" />
+      <module name="payment-order-extension-service-api" options="-parameters" />
+      <module name="payment-order-integration-outbound-api" options="-parameters" />
+      <module name="payment-order-service-api" options="-parameters" />
+      <module name="phone-payment-service-api" options="-parameters" />
+      <module name="places-client-api" options="-parameters" />
+      <module name="push-integration-service-api" options="-parameters" />
+      <module name="self-enrolment-client-api" options="-parameters" />
+      <module name="self-enrolment-service-api" options="-parameters" />
+      <module name="transaction-download-afb-client-api" options="-parameters" />
+      <module name="transaction-manager-extension-service-api" options="-parameters" />
+      <module name="transaction-manager-persistence-api" options="-parameters" />
+      <module name="transaction-manager-service-api" options="-parameters" />
+      <module name="user-manager-extension-client-api" options="-parameters" />
+      <module name="user-manager-integration-outbound" options="-parameters" />
+      <module name="user-manager-service-api" options="-parameters" />
+      <module name="value-management-client-api" options="-parameters" />
+    </option>
+  </component>
+</project>

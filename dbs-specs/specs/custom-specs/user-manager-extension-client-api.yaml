@@ -1,0 +1,423 @@
+openapi: 3.0.3
+info:
+  title: User Enrolled API Spec
+  description: Specs for Message Service API
+  version: 1.0.0
+servers:
+  - description: local test
+    url: http://localhost:8080/api/v1
+
+paths:
+  /service-api/v2/users/identities/{internalId}/access:
+    put:
+      tags:
+        - identity-management-service
+      summary: Revoke Identity access
+      description: |
+        This endpoint sets the user's status to Access Revoked and disables the user, effectively making them
+        unable to access MicroSphere services. A user with status Access Revoked cannot be unlocked via other endpoints.
+      operationId: revokeIdentityAccess
+      parameters:
+        - name: internalId
+          in: path
+          description: User internal ID
+          required: true
+          schema:
+            type: string
+          examples:
+            example:
+              value: 6d23eb83-ae2c-4c7a-b8f2-2941d67e3be6
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RevokeIdentityAccessServiceRequest'
+            example:
+              comment: Customer closed all accounts.
+      responses:
+        '204':
+          description: Access has been revoked
+  /client-api/v2/credentials/{userId}/delete-secret-question:
+    summary: UserManager
+    description: Calls for the identity delete secret question endpoint.
+    delete:
+      tags:
+        - delete-secret-question
+      description: delete secret question
+      operationId: deleteSecretQuestion
+      parameters:
+        - name: userId
+          in: path
+          description: user id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: secret question deleted successfully.
+  /client-api/v2/registration/users/{userId}/status:
+    get:
+      tags:
+        - user-registration
+      summary: Returns user informations.
+      description: Returns if user enrolled or not.
+      operationId: getUserRegistrationStatus
+      responses:
+        "200":
+          description: enrolled sucessfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/registrationStatus'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                example:
+                  value:
+                    message: Bad Request
+                    errors:
+                      - message: "Value Exceeded. Must be between {min} and {max}."
+                        key: common.api.shoesize
+                        context:
+                          max: "50"
+                          min: "1"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                example:
+                  value:
+                    message: Access to requested resource denied.
+                    errors:
+                      - message: "Resource access denied due to an insufficient user\
+                             \ quota of {quota}."
+                        key: common.api.quota
+                        context:
+                          quota: someQuota
+        "500":
+          description: InternalServerError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                example:
+                  value:
+                    message: Description of error
+      parameters:
+        - name: userId
+          in: path
+          description: user id
+          required: true
+          schema:
+            maxLength: 128
+            minLength: 1
+            type: string
+          examples:
+            example:
+              summary: example
+  /client-api/v2/registration/users/{internalUserId}/email:
+    post:
+      tags:
+        - user-registration
+      summary: send mail for the corresponding user.
+      description: send mail for the corresponding user.
+      operationId: resendRegistrationEmail
+      responses:
+        "200":
+          description: sucessfully resend
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identifier'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                example:
+                  value:
+                    message: Bad Request
+                    errors:
+                      - message: "Value Exceeded. Must be between {min} and {max}."
+                        key: common.api.shoesize
+                        context:
+                          max: "50"
+                          min: "1"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                example:
+                  value:
+                    message: Access to requested resource denied.
+                    errors:
+                      - message: "Resource access denied due to an insufficient user\
+                                \ quota of {quota}."
+                        key: common.api.quota
+                        context:
+                          quota: someQuota
+        "500":
+          description: InternalServerError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                example:
+                  value:
+                    message: Description of error
+      parameters:
+        - name: internalUserId
+          in: path
+          description: User Id
+          required: true
+          schema:
+            maxLength: 128
+            minLength: 1
+            type: string
+          examples:
+            example:
+              summary: Example
+  /client-api/v2/getAllServiceAgreement/{legalEntityId}:
+    post:
+      tags:
+        - get-all-service-agreement
+      summary: get all service agreement.
+      description: send mail and le .
+      operationId: getAllSAByEmailAndLe
+      requestBody:
+        description: Email address to send.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAgreementsRequestBody'
+      responses:
+        "200":
+          description: sucessfully resend
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAgreementsResponseBody'
+        "400":
+          description: BadRequest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+              examples:
+                example:
+                  value:
+                    message: Bad Request
+                    errors:
+                      - message: "Value Exceeded. Must be between {min} and {max}."
+                        key: common.api.shoesize
+                        context:
+                          max: "50"
+                          min: "1"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForbiddenError'
+              examples:
+                example:
+                  value:
+                    message: Access to requested resource denied.
+                    errors:
+                      - message: "Resource access denied due to an insufficient user\
+                                \ quota of {quota}."
+                        key: common.api.quota
+                        context:
+                          quota: someQuota
+        "500":
+          description: InternalServerError
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+              examples:
+                example:
+                  value:
+                    message: Description of error
+      parameters:
+        - $ref: '#/components/parameters/query-from'
+        - $ref: '#/components/parameters/query-size'
+        - name: legalEntityId
+          in: path
+          description: legal Entity Id
+          required: true
+          schema:
+            type: string
+
+
+
+components:
+  schemas:
+    RevokeIdentityAccessServiceRequest:
+      type: object
+      properties:
+        comment:
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: 'A comment regarding the access revokation, commonly a reason to revoke access.'
+        additions:
+          type: object
+          additionalProperties:
+            type: string
+      required:
+        - comment
+    registrationStatus:
+      required:
+        - enrollmentStatus
+        - legalEntityType
+      type: object
+      properties:
+        userId:
+          type: string
+          description: This flag indicates if the current user id
+        enrollmentStatus:
+          $ref: '#/components/schemas/enrollmentStatus'
+        legalEntityType:
+          $ref: '#/components/schemas/legalEntityType'
+    Identifier:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: This flag indicates if the user id to send mail
+    ServiceAgreementsResponseBody:
+      title: ServiceAgreementsResponseBody
+      type: object
+      properties:
+        ServiceAgreementResult:
+          type: array
+          items:
+            $ref: '#/components/schemas/ServiceAgreementResult'
+        totalElements:
+          type: integer
+          description: number of elements
+      description: Bank bill response body.
+    ServiceAgreementResult:
+      properties:
+        serviceAgreementName:
+          type: string
+          description: service agreement name.
+      description: service agreement information.
+    ServiceAgreementsRequestBody:
+      properties:
+        email:
+          type: string
+          description: Email address to send.
+    BadRequestError:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/ErrorItem'
+      x-java-type: com.microsphere.buildingblocks.presentation.errors.BadRequestException
+    ErrorItem:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Default Message. Any further information.
+        key:
+          type: string
+          description: "{capability-name}.api.{api-key-name}. For generated validation\
+                \ errors this is the path in the document the error resolves to. e.g.\
+                \ object name + '.' + field"
+        context:
+          type: object
+          description: Context can be anything used to construct localised messages.
+          x-java-type: "java.util.Map<String,String>"
+      description: A validation error
+    ForbiddenError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Any further information
+        errors:
+          type: array
+          description: Detailed error information
+          items:
+            $ref: '#/components/schemas/ErrorItem'
+      x-java-type: com.microsphere.buildingblocks.presentation.errors.ForbiddenException
+    InternalServerError:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+          description: Further Information
+      description: Represents HTTP 500 Internal Server Error
+      x-java-type: com.microsphere.buildingblocks.presentation.errors.InternalServerErrorException
+    legalEntityType:
+      type: string
+      description: Legal Entity Type (Corporate, Retail or Unknown)
+      enum:
+        - CORPORATE
+        - RETAIL
+        - UNKNOWN
+    enrollmentStatus:
+      type: string
+      description: User Enrollment status (ENROLLED, NOT_ENROLLED or UNKNOWN)
+      enum:
+        - ENROLLED
+        - NOT_ENROLLED
+        - UNKNOWN
+  parameters:
+    query-from:
+      name: from
+      in: query
+      description: The page number. Skip over pages of elements by specifying a start value for the query.
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+        format: int32
+        default: 0
+      example: 20
+    query-size:
+      name: size
+      in: query
+      description: "Limit the number of elements in the response. When used in combination with cursor, the value is allowed to be a negative number to indicate requesting records upwards from the starting point indicated by the cursor."
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 1
+        type: integer
+        format: int32
+        default: 10
+      examples:
+        example:
+          summary: Example
+          value: 80

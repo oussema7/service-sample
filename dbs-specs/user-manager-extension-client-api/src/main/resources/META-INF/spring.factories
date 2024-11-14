@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.microsphere.usermanager.extension.client.api.configuration.ApiClientExtensionAutoConfiguration

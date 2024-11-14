@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.microsphere.dbs.api</groupId>
+        <artifactId>dbs-specs</artifactId>
+        <version>2022.08-LTS-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>api-bom</artifactId>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>arrangement-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>approval-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Access Control API -->
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>access-control-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>access-control-extension-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>user-manager-service-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>user-manager-extension-client-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- onboarding API -->
+            <dependency>
+                <groupId>com.microsphere.dbs.api</groupId>
+                <artifactId>corporate-onboarding-client-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

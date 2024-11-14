@@ -1,0 +1,245 @@
+openapi: 3.0.3
+info:
+  title: Legal Entity Ancestor Service API
+  description: "OpenApi Endpoints for managing Legal Entities Ancestors.\n"
+  license:
+    name: Copyright MicroSphere 2020
+    url: https://www.microsphere.com
+  version: v2
+servers:
+  - url: /serviceName/
+    description: The server
+tags:
+  - name: Legal Entity Ancestor Service API
+paths:
+  /service-api/v2/ancestors/externalId/{legalEntityExternalId}/type:
+    summary: Get Legal Entity Hierarchy Type
+    description: Get Legal Entity Hierarchy Type (Corporate, Retail or Unknown) by External Id
+    get:
+      tags:
+        - legal-entity-ancestor
+      summary: Get Legal Entity Hierarchy Type by External Id.
+      description: Get Legal Entity Hierarchy Type by External Id.
+      operationId: getLegalEntityType
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LegalEntityTypePostResponse'
+    parameters:
+      - name: legalEntityExternalId
+        in: path
+        description: Legal Entity External Id
+        required: true
+        schema:
+          maxLength: 50
+          minLength: 1
+          type: string
+        examples:
+          example:
+            summary: example
+  /service-api/v2/service-agreement/{id}/type:
+    summary: Get Service Agreement Type
+    description: Get Service Agreement Type (Corporate, Retail or Unknown) by Id
+    get:
+      tags:
+        - legal-entity-ancestor
+      summary: Get Service Agreement Type by Id.
+      description: Get Service Agreement Type by Id.
+      operationId: getServiceAgreementType
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAgreementTypePostResponse'
+    parameters:
+      - name: id
+        in: path
+        description: Service Agreement Id
+        required: true
+        schema:
+          maxLength: 50
+          minLength: 1
+          type: string
+        examples:
+          example:
+            summary: example
+  /service-api/v2/ancestors/externalId/{legalEntityExternalId}:
+    summary: Get the corresponding hierarchy of the Legal Entity with the passed External Id
+    description: get list of External Ids of the hierarchy for a giver Legal Entity
+    get:
+      tags:
+        - legal-entity-ancestor
+      summary: get list of External Ids of the hierarchy for a giver Legal Entity.
+      description: get list of External Ids of the hierarchy for a giver Legal Entity.
+      operationId: getAncestorsLegalEntities
+      responses:
+        "200":
+          description: No description available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hierarchyPostResponse'
+    parameters:
+      - name: legalEntityExternalId
+        in: path
+        description: Legal Entity External Id
+        required: true
+        schema:
+          maxLength: 50
+          minLength: 1
+          type: string
+        examples:
+          example:
+            summary: example
+  /service-api/v2/accessgroups/service-agreements/{id}/users/{userId}/permissions:
+    summary: AssignUsersPermissions
+    description: List Assigned permissions
+    get:
+      tags:
+        - ServiceAgreements
+      summary: List Assigned permissions for a users in a service agreement. - `GET`.
+      description: "# List Assigned permissions for a users in a service agreement.\
+        \ - `GET`\r\n\r\nReturns user permissions and approval id for specific user\
+        \ and service agreement."
+      operationId: getAssignUsersPermissions
+      parameters:
+        - name: id
+          in: path
+          description: Service Agreement ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: User ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Users permissions successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalPermissions'
+components:
+  schemas:
+    identifier:
+      type: string
+      description: Identifier
+    legalEntityType:
+      type: string
+      description: Legal Entity Type (Corporate, Retail or Unknown)
+      enum:
+        - CORPORATE
+        - RETAIL
+        - UNKNOWN
+    legalEntityIdentifier:
+      type: object
+      description: Legal entity identifier
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        externalId:
+          $ref: '#/components/schemas/identifier'
+    subsidiaries:
+      type: array
+      description: List of subsidiaries
+      items:
+        $ref: '#/components/schemas/legalEntityIdentifier'
+    LegalEntityTypePostResponse:
+      required:
+        - externalId
+        - type
+      type: object
+      properties:
+        externalId:
+          $ref: '#/components/schemas/identifier'
+        type:
+          $ref: '#/components/schemas/legalEntityType'
+      description: Get legal entity type request
+      x-java-type: com.microsphere.dbs.accesscontrolextension.rest.model.LegalEntityTypePostResponse
+    ServiceAgreementTypePostResponse:
+      required:
+        - id
+        - type
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/identifier'
+        type:
+          $ref: '#/components/schemas/legalEntityType'
+      description: Get service agreement type response
+      x-java-type: com.microsphere.dbs.accesscontrolextension.rest.model.ServiceAgreementTypePostResponse
+    hierarchyPostResponse:
+      required:
+        - rootEntity
+        - subsidiaries
+      type: object
+      properties:
+        rootEntity:
+          $ref: '#/components/schemas/legalEntityIdentifier'
+        subsidiaries:
+          $ref: '#/components/schemas/subsidiaries'
+      description: Get legal entity ancestors
+      x-java-type: com.microsphere.dbs.accesscontrolextension.rest.model.hierarchyPostResponse
+    ApprovalPermissions:
+      required:
+        - items
+      type: object
+      example:
+        items:
+          - functionGroupId: 98f8531d-9bf4-4f3f-a49b-7cf331d6eead
+            dataGroupIds:
+              - id: 138a7683-e9da-4ffa-a257-b78626790cd7
+          - functionGroupId: 00779897-253c-4bbb-b0c7-3c47fd0b0b08
+            dataGroupIds: [ ]
+      allOf:
+        - type: object
+          properties:
+            approvalId:
+              type: string
+              description: Id of approval request.
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/FunctionDataGroup'
+    FunctionDataGroup:
+      required:
+        - dataGroupIds
+        - functionGroupId
+      type: object
+      allOf:
+        - type: object
+          properties:
+            functionGroupId:
+              $ref: '#/components/schemas/Uuid'
+            dataGroupIds:
+              minLength: 0
+              type: array
+              items:
+                $ref: '#/components/schemas/GenericObjectId'
+    GenericObjectId:
+      required:
+        - id
+      type: object
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/Uuid'
+    Uuid:
+      maxLength: 36
+      minLength: 1
+      pattern: "^[0-9a-f]{32}$|^[0-9a-f-]{36}$"
+      type: string
+      description: Universally Unique IDentifier.
